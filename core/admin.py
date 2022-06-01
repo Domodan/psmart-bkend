@@ -1,0 +1,59 @@
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
+
+from core.models import Attendance, Profile, School, Student, Teacher
+
+
+# Define an inline admin descriptor for Employee model
+# which acts a bit like a singleton
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    # verbose_name = "User Profile"
+    verbose_name_plural = "User Profile"
+
+
+# Defining New Custom User Admin
+class UserAdmin(BaseUserAdmin):
+    inlines = (ProfileInline, )
+
+# Re-register User Admin
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
+
+
+# Register Teacher model.
+class Teacher_Admin(admin.ModelAdmin):
+    fields = [ 'first_name', 'last_name', 'phone', 'subject', 'gender' ]
+
+    list_display = ( 'first_name', 'last_name', 'phone', 'subject', 'gender' )
+
+admin.site.register(Teacher, Teacher_Admin)
+
+
+# Register Student model.
+class Student_Admin(admin.ModelAdmin):
+    fields = [ 'first_name', 'last_name', 'birthday', 'student_class', 'gender', 'level' ]
+
+    list_display = ( 'first_name', 'last_name', 'birthday', 'student_class', 'gender', 'level' )
+
+admin.site.register(Student, Student_Admin)
+
+
+# Register School model.
+class School_Admin(admin.ModelAdmin):
+    fields = [ 'name', 'level', 'headteacher', 'district' ]
+
+    list_display = ( 'name', 'level', 'headteacher', 'district' )
+
+admin.site.register(School, School_Admin)
+
+
+# Register Attendance model.
+class Attendance_Admin(admin.ModelAdmin):
+    fields = [ 'name', 'status', 'time_in', 'time_out' ]
+
+    list_display = ( 'name', 'status', 'time_in', 'time_out' )
+
+admin.site.register(Attendance, Attendance_Admin)
