@@ -29,9 +29,15 @@ class UserViewSet(viewsets.ViewSet):
             password = request.data.get("password")
 
             if '@' in email:
-                user = User.objects.get(email=email)
+                try:
+                    user = User.objects.get(email=email)
+                except User.DoesNotExist:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
             else:
-                user = User.objects.get(username=email)
+                try:
+                    user = User.objects.get(username=email)
+                except User.DoesNotExist:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
             
             # user = authenticate(username=email, password=password)
             print("User:", user)
