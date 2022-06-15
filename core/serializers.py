@@ -19,6 +19,18 @@ class Attendance_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Attendance
         fields = '__all__'
+    
+    def create(self, validated_data):
+        print("Validated Data:", validated_data)
+        name = validated_data.pop("name")
+        user_type = validated_data.pop("user_type")
+
+        if Attendance.objects.filter(name=name, user_type=user_type).exists():
+            attendance = Attendance.objects.get(name=name, user_type=user_type)
+        else:
+            attendance = Attendance.objects.create(name=name, user_type=user_type, **validated_data)
+        
+        return attendance
 
 
 # Create User Serializer Class

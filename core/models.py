@@ -64,7 +64,7 @@ class Attendance(models.Model):
     user_type = models.CharField(max_length=10, default="Student") # Student | Teacher
     status = models.CharField(max_length=10) # Present | Absent
     time_in = models.DateTimeField()
-    time_out = models.DateTimeField()
+    time_out = models.DateTimeField(blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:

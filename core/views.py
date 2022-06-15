@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -99,8 +100,25 @@ class AttendanceViewSet(viewsets.ViewSet):
 
     def create(self, request): # POST
         print("Request Data:", request.data)
-        print("Action:", request.data.get("action"))
+        action = request.data.get("action")
+        print("Action:", action)
+        user_type = request.data.get("user_type")
+        print("UserType:", user_type)
+        user_id = request.data.get("user_id")
+        print("UserID:", user_id)
+
+
+        request.data["name"] = user_id
+        request.data["user_type"] = user_type
+        request.data["status"] = "Present"
+
+        time_now = datetime.now()
+        time_in = time_now + timedelta(seconds=20)
+
+        request.data["time_in"] = time_in
+
         serializer = Attendance_Serializer(data=request.data)
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
