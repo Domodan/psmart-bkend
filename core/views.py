@@ -114,9 +114,10 @@ class AttendanceViewSet(viewsets.ViewSet):
         request_data["status"] = "Present"
 
         time_now = datetime.now()
-        time_in = time_now + timedelta(seconds=20)
+        time_out = time_now + timedelta(hours=1)
 
-        request_data["time_in"] = time_in
+        request_data["time_in"] = time_now
+        request_data["time_out"] = time_out
 
         serializer = Attendance_Serializer(data=request_data)
 
