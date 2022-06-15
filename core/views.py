@@ -99,6 +99,7 @@ class AttendanceViewSet(viewsets.ViewSet):
 
     def create(self, request): # POST
         print("Request Data:", request.data)
+        print("Action:", request.data.get("action"))
         serializer = Attendance_Serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
