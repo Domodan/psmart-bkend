@@ -107,18 +107,19 @@ class AttendanceViewSet(viewsets.ViewSet):
         user_id = request.data.get("user_id")
         print("UserID:", user_id)
 
+        request_data = {}
 
-        request.data["name"] = user_id
-        request.data["user_type"] = user_type
-        request.data["status"] = "Present"
+        request_data["name"] = user_id
+        request_data["user_type"] = user_type
+        request_data["status"] = "Present"
 
         time_now = datetime.now()
         time_in = time_now + timedelta(seconds=20)
 
-        request.data["time_in"] = time_in
+        request_data["time_in"] = time_in
 
         serializer = Attendance_Serializer(data=request.data)
-        
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
