@@ -61,7 +61,8 @@ class Profile(models.Model):
 class Attendance(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=50)
-    status = models.CharField(max_length=10) #Present | Absent
+    user_type = models.CharField(max_length=10, default="Student") # Student | Teacher
+    status = models.CharField(max_length=10) # Present | Absent
     time_in = models.DateTimeField()
     time_out = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)

@@ -14,6 +14,13 @@ class User_Serializer(serializers.ModelSerializer):
         # ]
 
 
+# Attendance Serializer Class
+class Attendance_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = '__all__'
+
+
 # Create User Serializer Class
 # class User_Creation_Serializer(serializers.ModelSerializer):
 #     class Meta:

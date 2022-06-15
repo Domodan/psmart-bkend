@@ -88,3 +88,55 @@ class UserViewSet(viewsets.ViewSet):
         queryset.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class AttendanceViewSet(viewsets.ViewSet):
+
+    def list(self, request): # GET
+        queryset = Attendance.objects.all()
+        serializer = Attendance_Serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    def create(self, request): # POST
+        print("Request Data:", request.data)
+        serializer = Attendance_Serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def retrieve(self, request, pk=None): # GET
+        try:
+            queryset = get_object_or_404(pk=pk)
+        except Attendance.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = Attendance_Serializer(queryset)
+        return Response(serializer.data, status.HTTP_302_FOUND)
+
+
+    def update(self, request, pk=None): # PUT
+        try:
+            queryset = Attendance.objects.get(pk=pk)
+        except Attendance.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = Attendance_Serializer(queryset, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def partial_update(self, request, pk=None):
+        pass
+
+
+    def destroy(self, request, pk=None): # DELETE
+        try:
+            queryset = Attendance.objects.get(pk=pk)
+        except Attendance.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        queryset.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
