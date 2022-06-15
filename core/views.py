@@ -118,7 +118,7 @@ class AttendanceViewSet(viewsets.ViewSet):
 
         request_data["time_in"] = time_in
 
-        serializer = Attendance_Serializer(data=request.data)
+        serializer = Attendance_Serializer(data=request_data)
 
         if serializer.is_valid():
             serializer.save()
