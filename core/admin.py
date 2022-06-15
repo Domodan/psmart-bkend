@@ -54,6 +54,6 @@ admin.site.register(School, School_Admin)
 class Attendance_Admin(admin.ModelAdmin):
     fields = [ 'name', 'status', 'time_in', 'time_out' ]
 
-    list_display = ( 'name', 'status', 'time_in', 'time_out' )
+    list_display = ( 'name', 'status', 'time_in', 'time_out', 'created_at', 'updated_at' )
 
 admin.site.register(Attendance, Attendance_Admin)

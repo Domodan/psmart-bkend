@@ -100,30 +100,33 @@ class AttendanceViewSet(viewsets.ViewSet):
 
     def create(self, request): # POST
         print("Request Data:", request.data)
+
         action = request.data.get("action")
-        print("Action:", action)
         user_type = request.data.get("user_type")
-        print("UserType:", user_type)
         user_id = request.data.get("user_id")
-        print("UserID:", user_id)
 
-        request_data = {}
+        if action == "old":
+            queryset = Attendance.objects.get(name=user_id, user_type=user_type)
+            serializer = Attendance_Serializer(queryset)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            request_data = {}
 
-        request_data["name"] = user_id
-        request_data["user_type"] = user_type
-        request_data["status"] = "Present"
+            request_data["name"] = user_id
+            request_data["user_type"] = user_type
+            request_data["status"] = "Present"
 
-        time_now = datetime.now()
-        time_out = time_now + timedelta(hours=1)
+            time_now = datetime.now()
+            time_out = time_now + timedelta(hours=1)
 
-        request_data["time_in"] = time_now
-        request_data["time_out"] = time_out
+            request_data["time_in"] = time_now
+            request_data["time_out"] = time_out
 
-        serializer = Attendance_Serializer(data=request_data)
+            serializer = Attendance_Serializer(data=request_data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
