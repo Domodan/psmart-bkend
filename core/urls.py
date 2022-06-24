@@ -1,14 +1,7 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-from core.views import UserViewSet, AttendanceViewSet
-
-
-router = DefaultRouter()
-router.register(r'user', UserViewSet, basename="UserViewSet")
-router.register(r'attendance', AttendanceViewSet, basename="AttendanceViewSet")
+from django.urls import path
+from core.views import *
 
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', index, name='index'),
 ]
