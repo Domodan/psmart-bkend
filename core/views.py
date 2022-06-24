@@ -9,8 +9,8 @@ def index(request):
     students = []
     
     for attendance in attendances:
-        if attendance['user_type'] == "Student":
-            student = Student.objects.filter(name=attendance['name'])
+        if attendance.user_type == "Student":
+            student = Student.objects.filter(first_name=attendance.name)
             students.append(student)
         
     return render(request, 'core/index.html',
