@@ -107,7 +107,7 @@ class AttendanceViewSet(viewsets.ViewSet):
         user_id = request.data.get("user_id")
 
         if action == "old":
-            if user_action == "Sign In":
+            if user_action == "Check In":
                 queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
 
                 time_now = datetime.now()
@@ -115,7 +115,7 @@ class AttendanceViewSet(viewsets.ViewSet):
 
                 queryset.save()
 
-            elif user_action == "Sign Out":
+            elif user_action == "Check Out":
                 queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
 
                 time_now = datetime.now()
@@ -130,7 +130,7 @@ class AttendanceViewSet(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             if Attendance.objects.filter(name=user_id, user_type=user_type).exists():
-                if user_action == "Sign In":
+                if user_action == "Check In":
                     queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
 
                     time_now = datetime.now()
@@ -138,7 +138,7 @@ class AttendanceViewSet(viewsets.ViewSet):
 
                     queryset.save()
 
-                elif user_action == "Sign Out":
+                elif user_action == "Check Out":
                     queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
 
                     time_now = datetime.now()
