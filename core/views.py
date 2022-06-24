@@ -8,8 +8,7 @@ def index(request):
     attendances = Attendance.objects.all()
     students = []
     
-    for i in attendances:
-        attendance = attendances[i]
+    for attendance in attendances:
         if attendance['user_type'] == "Student":
             student = Student.objects.filter(name=attendance['name'])
             students.append(student)
