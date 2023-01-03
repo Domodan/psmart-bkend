@@ -45,7 +45,7 @@
         {% endblock %}
 
         <script>
-            window.hs_config = {"autopath":"@@autopath","deleteLine":"hs-builder:delete","deleteLine:build":"hs-builder:build-delete","deleteLine:dist":"hs-builder:dist-delete","previewMode":false,"startPath":"{% url 'index' %}","vars":{"themeFont":"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap","version":"?v=1.0"},"layoutBuilder":{"extend":{"switcherSupport":true},"header":{"layoutMode":"default","containerMode":"container-fluid"},"sidebarLayout":"default"},"themeAppearance":{"layoutSkin":"default","sidebarSkin":"default","styles":{"colors":{"primary":"#377dff","transparent":"transparent","white":"#fff","dark":"132144","gray":{"100":"#f9fafc","900":"#1e2022"}},"font":"Inter"}},"languageDirection":{"lang":"en"},"skipFilesFromBundle":{"dist":["{% static 'core/assets/js/theme_appearance.js' %}","{% static 'core/assets/js/hs.theme-appearance-charts.js' %}","assets/js/demo.js"],"build":["assets/css/theme.css","{% static 'core/assets/vendors/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js' %}","assets/js/demo.js","assets/css/theme-dark.html","assets/css/docs.css","core/assets/vendors/icon-set/style.html","assets/js/theme_appearance.js","assets/js/hs.theme-appearance-charts.js","node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html","assets/js/demo.js'"]},"minifyCSSFiles":["assets/css/theme.css","assets/css/theme-dark.css"],"copyDependencies":{"dist":{"*assets/js/theme-custom.js":""},"build":{"*assets/js/theme-custom.js":"","node_modules/bootstrap-icons/font/*fonts/**":"assets/css"}},"buildFolder":"","replacePathsToCDN":{},"directoryNames":{"src":"./src","dist":"./dist","build":"./build"},"fileNames":{"dist":{"js":"theme.min.js","css":"theme.min.css"},"build":{"css":"theme.min.css","js":"theme.min.js","vendorCSS":"vendor.min.css","vendorJS":"vendor.min.js"}},"fileTypes":"jpg|png|svg|mp4|webm|ogv|json"}
+            window.hs_config = {"autopath":"@@autopath","deleteLine":"hs-builder:delete","deleteLine:build":"hs-builder:build-delete","deleteLine:dist":"hs-builder:dist-delete","previewMode":false,"startPath":"{% url 'index' %}","vars":{"themeFont":"https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap","version":"?v=1.0"},"layoutBuilder":{"extend":{"switcherSupport":true},"header":{"layoutMode":"default","containerMode":"container-fluid"},"sidebarLayout":"default"},"themeAppearance":{"layoutSkin":"default","sidebarSkin":"default","styles":{"colors":{"primary":"#377dff","transparent":"transparent","white":"#fff","dark":"132144","gray":{"100":"#f9fafc","900":"#1e2022"}},"font":"Inter"}},"languageDirection":{"lang":"en"},"skipFilesFromBundle":{"dist":["{% static 'core/assets/js/theme_appearance.js' %}","{% static 'core/assets/js/hs.theme-appearance-charts.js' %}","{% static 'core/assets/js/demo.js' %}"],"build":["{% static 'core/assets/css/theme.css' %}","{% static 'core/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js' %}","{% static 'core/assets/js/demo.js' %}","{% static 'core/assets/css/theme-dark.html' %}","{% static 'core/assets/css/docs.css' %}","{% static 'core/assets/vendor/icon-set/style.html' %}","{% static 'core/assets/js/theme_appearance.js' %}","{% static 'core/assets/js/hs.theme-appearance-charts.js' %}","node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html","{% static 'core/assets/js/demo.js' %}"]},"minifyCSSFiles":["{% static 'core/assets/css/theme.css' %}","{% static 'core/assets/css/theme-dark.css' %}"],"copyDependencies":{"dist":{"*{% static 'core/assets/js/theme-custom.js' %}":""},"build":{"*{% static 'core/assets/js/theme-custom.js' %}":"","node_modules/bootstrap-icons/font/*fonts/**":"assets/css"}},"buildFolder":"","replacePathsToCDN":{},"directoryNames":{"src":"./src","dist":"./dist","build":"./build"},"fileNames":{"dist":{"js":"theme.min.js","css":"theme.min.css"},"build":{"css":"theme.min.css","js":"theme.min.js","vendorCSS":"vendor.min.css","vendorJS":"vendor.min.js"}},"fileTypes":"jpg|png|svg|mp4|webm|ogv|json"}
             
             window.hs_config.gulpRGBA = (p1) => {
                 const options = p1.split(',')
@@ -155,7 +155,7 @@
 
         <script src="{% static '/core/assets/js/theme_appearance.js' %}"></script>
 
-        <script src="{% static 'core/assets/vendors/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js' %}"></script>
+        <script src="{% static 'core/assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js' %}"></script>
 
         <!-- ========== HEADER ========== -->
 
@@ -857,8 +857,12 @@
                             <div class="dropdown">
                             <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation>
                                 <div class="avatar avatar-sm avatar-circle">
-                                <img class="avatar-img" src="{% static 'core/assets/img/160x160/img6.jpg' %}" alt="Image Description">
-                                <span class="avatar-status avatar-sm-status avatar-status-success"></span>
+                                    {% if user.is_authenticated %}
+                                        <img class="avatar-img" src="{{ user.profile.avatar.url }}" alt="Image Description">
+                                    {% else %}
+                                        <img class="avatar-img" src="{% static 'core/assets/img/160x160/img6.jpg' %}" alt="Image Description">
+                                    {% endif %}
+                                    <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                             </a>
 
@@ -866,12 +870,23 @@
                                 <div class="dropdown-item-text">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img" src="{% static 'core/assets/img/160x160/img6.jpg' %}" alt="Image Description">
+                                        {% if user.is_authenticated %}
+                                            <img class="avatar-img" src="{{ user.profile.avatar.url }}" alt="Image Description">
+                                        {% else %}
+                                            <img class="avatar-img" src="{% static 'core/assets/img/160x160/img6.jpg' %}" alt="Image Description">
+                                        {% endif %}
                                     </div>
-                                    <div class="flex-grow-1 ms-3">
-                                    <h5 class="mb-0">Mark Williams</h5>
-                                    <p class="card-text text-body">mark@site.com</p>
-                                    </div>
+                                    {% if user.is_authenticated %}
+                                        <div class="flex-grow-1 ms-3">
+                                            <h5 class="mb-0">{{user.last_name}} {{user.first_name}}</h5>
+                                            <p class="card-text text-body">{{user.email}}</p>
+                                        </div>
+                                    {% else %}
+                                        <div class="flex-grow-1 ms-3">
+                                            <h5 class="mb-0">Mark Williams</h5>
+                                            <p class="card-text text-body">mark@site.com</p>
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 </div>
 
@@ -940,10 +955,11 @@
                                 <!-- End Dropdown -->
 
                                 <a class="dropdown-item" href="#">Manage team</a>
-
-                                <div class="dropdown-divider"></div>
-
-                                <a class="dropdown-item" href="#">Sign out</a>
+                                
+                                {% if user.is_authenticated %}
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'sign_out' %}">Sign out</a>
+                                {% endif %}
                             </div>
                             </div>
                             <!-- End Account -->
@@ -986,72 +1002,101 @@
                             <div class="nav-item">
                                 <a class="nav-link dropdown-toggle active" href="#navbarVerticalMenuDashboards" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="true" aria-controls="navbarVerticalMenuDashboards">
                                     <i class="bi-house-door nav-icon"></i>
-                                    <span class="nav-link-title">Dashboards</span>
+                                    <span class="nav-link-title">Attendance</span>
                                 </a>
 
                                 <div id="navbarVerticalMenuDashboards" class="nav-collapse collapse show" data-bs-parent="#navbarVerticalMenu">
-                                    <a class="nav-link active" href="{% url 'index' %}">Psmart</a>
+                                    <a class="nav-link active" href="{% url 'attendance_students' %}">Students</a>
+                                    <a class="nav-link" href="{% url 'attendance_teachers' %}">Teachers</a>
                                 </div>
                             </div>
                             <!-- End Collapse -->
 
-                            <span class="dropdown-header mt-4">Pages</span>
+                            <span class="dropdown-header mt-4">Users</span>
                             <small class="bi-three-dots nav-subtitle-replacer"></small>
 
-                            <div id="navbarVerticalMenuPagesMenu">
-                                <!-- Collapse -->
-                                <div class="nav-item">
-                                    <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUsersMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUsersMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
-                                        <i class="bi-people nav-icon"></i>
-                                        <span class="nav-link-title">Users</span>
-                                    </a>
+                            <div class="nav-item">
+                                <a class="nav-link" href="{% url 'all_users' %}" data-placement="left">
+                                    <i class="bi-people-fill nav-icon"></i>
+                                    <span class="nav-link-title">All</span>
+                                </a>
+                            </div>
 
-                                    <div id="navbarVerticalMenuPagesUsersMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                        <a class="nav-link " href="users.html">Overview</a>
-                                        <a class="nav-link " href="users-leaderboard.html">Leaderboard</a>
-                                        <a class="nav-link " href="users-add-user.html">Add User <span class="badge bg-info rounded-pill ms-1">Hot</span></a>
-                                    </div>
-                                </div>
-                                <!-- End Collapse -->
+                            <div class="nav-item">
+                                <a class="nav-link" href="{% url 'teachers' %}" data-placement="left">
+                                    <i class="bi-person-workspace nav-icon"></i>
+                                    <span class="nav-link-title">Teachers</span>
+                                </a>
+                            </div>
 
-                                <!-- Collapse -->
-                                <div class="nav-item">
-                                    <a class="nav-link dropdown-toggle " href="#navbarVerticalMenuPagesUserProfileMenu" role="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalMenuPagesUserProfileMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUserProfileMenu">
-                                        <i class="bi-person nav-icon"></i>
-                                        <span class="nav-link-title">
-                                            User Profile <span class="badge bg-primary rounded-pill ms-1">5</span>
-                                        </span>
-                                    </a>
+                            <div class="nav-item">
+                                <a class="nav-link" href="{% url 'students' %}" data-placement="left">
+                                    <i class="bi-person-circle nav-icon"></i>
+                                    <span class="nav-link-title">Students</span>
+                                </a>
+                            </div>
 
-                                    <div id="navbarVerticalMenuPagesUserProfileMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                        <a class="nav-link " href="user-profile-teams.html">Teachers</a>
-                                        <a class="nav-link " href="user-profile-teams.html">Students</a>
-                                        <a class="nav-link " href="user-profile.html">Profile</a>
-                                        <a class="nav-link " href="user-profile-my-profile.html">My Profile</a>
-                                    </div>
-                                </div>
-                                <!-- End Collapse -->
+                            <div class="nav-item">
+                                <a class="nav-link" href="{% url 'all_admin' %}" data-placement="left">
+                                    <i class="bi-person-bounding-box nav-icon"></i>
+                                    <span class="nav-link-title">Admin</span>
+                                </a>
+                            </div>
 
-                                <div class="nav-item">
-                                    <a class="nav-link " href="authentication-login-basic.html" data-placement="left">
-                                        <i class="bi-shield-lock nav-icon"></i>
-                                        <span class="nav-link-title">Log In</span>
-                                    </a>
-                                </div>
+                            <span class="dropdown-header mt-4">User Profile</span>
+                            <small class="bi-three-dots nav-subtitle-replacer"></small>
 
-                                <div class="nav-item">
-                                    <a class="nav-link " href="authentication-signup-basic.html" data-placement="left">
-                                        <i class="bi-key nav-icon"></i>
-                                        <span class="nav-link-title">Sign Up</span>
-                                    </a>
-                                </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="user-profile-my-profile.html" data-placement="left">
+                                    <i class="bi-person-rolodex nav-icon"></i>
+                                    <span class="nav-link-title">My Profile</span>
+                                </a>
+                            </div>
 
-                                <div class="nav-item">
-                                    <a class="nav-link " href="landing.html" data-placement="left">
-                                    <i class="bi-box-seam nav-icon"></i>
-                                    <span class="nav-link-title">Landing Page <span class="badge bg-info rounded-pill ms-1">New</span></span>
-                                    </a>
-                                </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="user-profile-teams.html" data-placement="left">
+                                    <i class="bi-wallet-fill nav-icon"></i>
+                                    <span class="nav-link-title">Leaderboard</span>
+                                </a>
+                            </div>
+
+                            <div class="nav-item">
+                                <a class="nav-link " href="users-add-user.html">
+                                    <i class="bi-person-plus-fill nav-icon"></i>
+                                    Add User 
+                                    <span class="badge bg-info rounded-pill ms-1">Hot</span>
+                                </a>
+                            </div>
+
+                            <div class="nav-item">
+                                <a class="nav-link" href="users-leaderboard.html" data-placement="left">
+                                    <i class="bi-eye-fill nav-icon"></i>
+                                    <span class="nav-link-title">Overview</span>
+                                </a>
+                            </div>
+
+                            <span class="dropdown-header mt-4">Others</span>
+                            <small class="bi-three-dots nav-subtitle-replacer"></small>
+
+                            <div class="nav-item">
+                                <a class="nav-link " href="{% url 'sign_in' %}" data-placement="left">
+                                    <i class="bi-shield-lock-fill nav-icon"></i>
+                                    <span class="nav-link-title">Log In</span>
+                                </a>
+                            </div>
+
+                            <div class="nav-item">
+                                <a class="nav-link " href="{% url 'add_user' %}" data-placement="left">
+                                    <i class="bi-file-lock-fill nav-icon"></i>
+                                    <span class="nav-link-title">Add User</span>
+                                </a>
+                            </div>
+
+                            <div class="nav-item">
+                                <a class="nav-link " href="landing.html" data-placement="left">
+                                <i class="bi-ui-checks-grid nav-icon"></i>
+                                <span class="nav-link-title">Landing Page <span class="badge bg-info rounded-pill ms-1">New</span></span>
+                                </a>
                             </div>
                             <!-- End Collapse -->
                         </div>
@@ -1126,33 +1171,33 @@
                                 <!-- Language -->
                                 <div class="dropdown dropup">
                                     <button type="button" class="btn btn-ghost-secondary btn-icon rounded-circle" id="selectLanguageDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-dropdown-animation>
-                                    <img class="avatar avatar-xss avatar-circle" src="{% static 'core/assets/vendors/flag-icon-css/flags/1x1/us.svg' %}" alt="United States Flag">
+                                    <img class="avatar avatar-xss avatar-circle" src="{% static 'core/assets/vendor/flag-icon-css/flags/1x1/us.svg' %}" alt="United States Flag">
                                     </button>
 
                                     <div class="dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="selectLanguageDropdown">
                                     <span class="dropdown-header">Select language</span>
                                     <a class="dropdown-item" href="#">
-                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendors/flag-icon-css/flags/1x1/us.svg' %}" alt="Flag">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendor/flag-icon-css/flags/1x1/us.svg' %}" alt="Flag">
                                         <span class="text-truncate" title="English">English (US)</span>
                                     </a>
                                     <a class="dropdown-item" href="#">
-                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendors/flag-icon-css/flags/1x1/gb.svg' %}" alt="Flag">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendor/flag-icon-css/flags/1x1/gb.svg' %}" alt="Flag">
                                         <span class="text-truncate" title="English">English (UK)</span>
                                     </a>
                                     <a class="dropdown-item" href="#">
-                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendors/flag-icon-css/flags/1x1/de.svg' %}" alt="Flag">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendor/flag-icon-css/flags/1x1/de.svg' %}" alt="Flag">
                                         <span class="text-truncate" title="Deutsch">Deutsch</span>
                                     </a>
                                     <a class="dropdown-item" href="#">
-                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendors/flag-icon-css/flags/1x1/dk.svg' %}" alt="Flag">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendor/flag-icon-css/flags/1x1/dk.svg' %}" alt="Flag">
                                         <span class="text-truncate" title="Dansk">Dansk</span>
                                     </a>
                                     <a class="dropdown-item" href="#">
-                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendors/flag-icon-css/flags/1x1/it.svg' %}" alt="Flag">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendor/flag-icon-css/flags/1x1/it.svg' %}" alt="Flag">
                                         <span class="text-truncate" title="Italiano">Italiano</span>
                                     </a>
                                     <a class="dropdown-item" href="#">
-                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendors/flag-icon-css/flags/1x1/cn.svg' %}" alt="Flag">
+                                        <img class="avatar avatar-xss avatar-circle me-2" src="{% static 'core/assets/vendor/flag-icon-css/flags/1x1/cn.svg' %}" alt="Flag">
                                         <span class="text-truncate" title="中文 (繁體)">中文 (繁體)</span>
                                     </a>
                                     </div>
@@ -1217,15 +1262,21 @@
         </main>
         <!-- ========== END MAIN CONTENT ========== -->
 
+        {% block demo_block %}
+        {% endblock %}
+
+        {% block modal_block %}
+        {% endblock %}
+
         <!-- JS Implementing Plugins -->
         <script src="{% static 'core/assets/js/vendor.min.js' %}"></script>
 
-        <script src="{% static 'core/assets/vendors/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js' %}"></script>
+        <script src="{% static 'core/assets/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js' %}"></script>
 
         <!-- JS Front -->
         <script src="{% static 'core/assets/js/theme.min.js' %}"></script>
         <script src="{% static 'core/assets/js/hs.theme-appearance-charts.js' %}"></script>
-
+        
         <!-- JS Plugins Init. -->
         <script>
             $(document).on('ready', function () {

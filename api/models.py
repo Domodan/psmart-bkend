@@ -1,7 +1,17 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth.backends import ModelBackend
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+# Users models | Profile.
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=15)
+    position = models.CharField(max_length=20, default="admin")
+    email_verified_at = models.DateTimeField(default=datetime.today())
+    avatar = models.ImageField(upload_to="profile", default="user.png")
 
 
 # Schools models.
@@ -23,6 +33,8 @@ class Teacher(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
+    staff_number = models.CharField(max_length=50, default="2022/TR/0001")
+    email = models.EmailField(max_length=50, blank=True)
     phone = models.CharField(max_length=15)
     subject = models.CharField(max_length=20)
     gender = models.CharField(max_length=50)
@@ -39,6 +51,7 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
+    registration_number = models.CharField(max_length=50, default="2022/STD/0001")
     birthday = models.DateField()
     student_class = models.CharField(max_length=20)
     level = models.CharField(max_length=20)
@@ -49,14 +62,6 @@ class Student(models.Model):
     class Meta:
         verbose_name = "Student"
         verbose_name_plural = "Student"
-
-
-# Users models | Profile.
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    school_name = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=15)
-    positions = models.CharField(max_length=20)
 
 
 # Attendance models
@@ -74,32 +79,13 @@ class Attendance(models.Model):
         verbose_name_plural = "Attendance"
 
 
-# Custom Authentication
-class EmailAuthBackend(ModelBackend):
-    def authenticate(self, username, password):
-        print("Auth Username:", username)
-        print("Auth Password:", password)
-        # if '@' in username:
-        #     kwargs = { 'email': username }
-        # else:
-        #     kwargs = { 'username': username }
-        
-        # try:
-        #     user = User.objects.get(**kwargs)
-        #     if check_password(password):
-        #         return user
-        # except User.DoesNotExist:
-        #     return None
-        try:
-            user = User.objects.get(email=username)
-            if user.check_passwrd(password):
-                return user
-            return None
-        except User.DoesNotExist:
-            return None
+# Post Save Signals
 
-    def get_user(self, user_id):
-        try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return None
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()

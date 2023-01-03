@@ -1,0 +1,17 @@
+
+{% extends "./base.html" %}
+{% load static %}
+{% block content %}
+  <div class="row justify-content-sm-center text-center py-10">
+    <div class="col-sm-8 col-md-7">
+      <img class="img-fluid mb-5" src="{% static 'core/assets/svg/illustrations/oc-collaboration.svg' %}" alt="Image Description" data-hs-theme-appearance="default">
+      <img class="img-fluid mb-5" src="{% static 'core/assets/svg/illustrations-light/oc-collaboration.svg' %}" alt="Image Description" data-hs-theme-appearance="dark">
+
+      <h1>Hello, Choose a User Category</h1>
+      <p>Different categories of Users include student, teacher, admin. You can also add a School</p>
+
+      <a class="btn btn-primary" href="{% url 'add_students' %}">Student</a>
+      <a class="btn btn-primary" href="{% url 'add_teachers' %}">Teacher</a>
+    </div>
+  </div>
+{% endblock %}
