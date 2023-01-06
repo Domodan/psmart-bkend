@@ -69,6 +69,7 @@ class Student(models.Model):
 class Attendance(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=50)
+    unique_id = models.CharField(max_length=50, default="2022/TR/10")
     user_type = models.CharField(max_length=10, default="Student") # Student | Teacher
     status = models.CharField(max_length=10, default="Absent") # Present | Absent | Late
     time_in = models.DateTimeField()

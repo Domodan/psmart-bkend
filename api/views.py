@@ -117,11 +117,12 @@ class AttendanceViewSet(viewsets.ViewSet):
         action = request.data.get("action")
         user_action = request.data.get("user_action")
         user_type = request.data.get("user_type")
-        user_id = request.data.get("user_id")
+        username = request.data.get("username")
+        unique_id = request.data.get("unique_id")
 
         if action == "old":
             if user_action == "Check In":
-                queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
+                queryset = Attendance.objects.filter(name=username, user_type=user_type).first()
 
                 time_now = datetime.now()
                 queryset.time_in = time_now
@@ -129,7 +130,7 @@ class AttendanceViewSet(viewsets.ViewSet):
                 queryset.save()
 
             elif user_action == "Check Out":
-                queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
+                queryset = Attendance.objects.filter(name=username, user_type=user_type).first()
 
                 time_now = datetime.now()
                 queryset.time_out = time_now
@@ -137,37 +138,33 @@ class AttendanceViewSet(viewsets.ViewSet):
                 queryset.save()
             
             else:
-                queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
+                queryset = Attendance.objects.filter(name=username, user_type=user_type).first()
             
             serializer = Attendance_Serializer(queryset)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            if Attendance.objects.filter(name=user_id, user_type=user_type).exists():
+            if Attendance.objects.filter(unique_id=unique_id, user_type=user_type).exists():
                 if user_action == "Check In":
-                    queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
-
+                    queryset = Attendance.objects.get(unique_id=unique_id, user_type=user_type)
+                    print("Attendance - Check In:", queryset)
                     time_now = datetime.now()
                     queryset.time_in = time_now
-
                     queryset.save()
-
                 elif user_action == "Check Out":
-                    queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
-
+                    queryset = Attendance.objects.get(unique_id=unique_id, user_type=user_type)
+                    print("Attendance - Check Out:", queryset)
                     time_now = datetime.now()
                     queryset.time_out = time_now
-
                     queryset.save()
-                
-                else:
-                    queryset = Attendance.objects.filter(name=user_id, user_type=user_type).first()
-                
+                # else:
+                #     queryset = Attendance.objects.get(unique_id=unique_id, user_type=user_type)
                 serializer = Attendance_Serializer(queryset)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 request_data = {}
 
-                request_data["name"] = user_id
+                request_data["name"] = username
+                request_data["unique_id"] = unique_id
                 request_data["user_type"] = user_type
                 request_data["status"] = "Present"
 
@@ -178,10 +175,11 @@ class AttendanceViewSet(viewsets.ViewSet):
                 request_data["time_out"] = time_out
 
                 serializer = Attendance_Serializer(data=request_data)
+                print("Serializer:", serializer.data)
 
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                # if serializer.is_valid():
+                #     serializer.save()
+                #     return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
