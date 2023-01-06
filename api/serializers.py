@@ -33,6 +33,18 @@ class Attendance_Serializer(serializers.ModelSerializer):
         return attendance
 
 
+# Teacher Serializer Class
+class Teacher_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = '__all__'
+
+
+# Student Serializer Class
+class Student_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = '__all__'
 # Create User Serializer Class
 # class User_Creation_Serializer(serializers.ModelSerializer):
 #     class Meta:

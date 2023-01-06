@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 
 # Users models | Profile.
@@ -10,7 +11,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15)
     position = models.CharField(max_length=20, default="admin")
-    email_verified_at = models.DateTimeField(default=datetime.today())
+    email_verified_at = models.DateTimeField(default=timezone.now)
     avatar = models.ImageField(upload_to="profile", default="user.png")
 
 
@@ -33,7 +34,7 @@ class Teacher(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
-    staff_number = models.CharField(max_length=50, default="2022/TR/0001")
+    unique_id = models.CharField(max_length=50, default="2022/TR/1")
     email = models.EmailField(max_length=50, blank=True)
     phone = models.CharField(max_length=15)
     subject = models.CharField(max_length=20)
@@ -51,7 +52,7 @@ class Student(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
-    registration_number = models.CharField(max_length=50, default="2022/STD/0001")
+    unique_id = models.CharField(max_length=50, default="2022/STD/1")
     birthday = models.DateField()
     student_class = models.CharField(max_length=20)
     level = models.CharField(max_length=20)

@@ -23,37 +23,50 @@ class UserViewSet(viewsets.ViewSet):
     def create(self, request): # POST
         print("Request Data:", request.data)
         if request.data.get("action") is not None:
-            # action = request.data.get("action")
-            # username = request.data.get("username")
-
-            email = request.data.get("email")
-            password = request.data.get("password")
-
-            if '@' in email:
-                try:
-                    user = User.objects.get(email=email)
-                except User.DoesNotExist:
-                    return Response(status=status.HTTP_404_NOT_FOUND)
-            else:
-                try:
-                    user = User.objects.get(username=email)
-                except User.DoesNotExist:
-                    return Response(status=status.HTTP_404_NOT_FOUND)
-            
-            # user = authenticate(username=email, password=password)
-            print("User:", user)
-
-            if user.check_password(password):
-                serializer = User_Serializer(user)
+            action = request.data.get("action")
+            if action == "getUser":
+                user_type = request.data.get("user_type")
+                unique_id = request.data.get("unique_id")
+                if user_type == "teacher":
+                    teacher = Teacher.objects.get(unique_id=unique_id)
+                    serializer = Teacher_Serializer(teacher)
+                elif user_type == "student":
+                    student = Student.objects.get(unique_id=unique_id)
+                    serializer = Student_Serializer(student)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                return Response(data=None, status=status.HTTP_400_BAD_REQUEST)
+
+                # action = request.data.get("action")
+                # username = request.data.get("username")
+
+                # email = request.data.get("email")
+                # password = request.data.get("password")
+
+                # if '@' in email:
+                #     try:
+                #         user = User.objects.get(email=email)
+                #     except User.DoesNotExist:
+                #         return Response(status=status.HTTP_404_NOT_FOUND)
+                # else:
+                #     try:
+                #         user = User.objects.get(username=email)
+                #     except User.DoesNotExist:
+                #         return Response(status=status.HTTP_404_NOT_FOUND)
+                
+                # user = authenticate(username=email, password=password)
+                # print("User:", user)
+
+                # if user.check_password(password):
+                #     serializer = User_Serializer(user)
+                #     return Response(serializer.data, status=status.HTTP_200_OK)
+                # else:
+                #     return Response(data=None, status=status.HTTP_400_BAD_REQUEST)
         else:
-            serializer = User_Serializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # serializer = User_Serializer(data=request.data)
+            # if serializer.is_valid():
+            #     serializer.save()
+            #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
     def retrieve(self, request, pk=None): # GET

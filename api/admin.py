@@ -25,18 +25,18 @@ admin.site.register(User, UserAdmin)
 
 # Register Teacher model.
 class Teacher_Admin(admin.ModelAdmin):
-    fields = [ 'first_name', 'last_name', 'phone', 'subject', 'gender', 'avatar' ]
+    fields = [ 'first_name', 'last_name', 'phone', 'subject', 'unique_id', 'gender', 'avatar' ]
 
-    list_display = ( 'first_name', 'last_name', 'phone', 'subject', 'gender', 'avatar' )
+    list_display = ( 'first_name', 'last_name', 'phone', 'subject', 'unique_id', 'gender', 'avatar' )
 
 admin.site.register(Teacher, Teacher_Admin)
 
 
 # Register Student model.
 class Student_Admin(admin.ModelAdmin):
-    fields = [ 'first_name', 'last_name', 'birthday', 'student_class', 'gender', 'level', 'avatar' ]
+    fields = [ 'first_name', 'last_name', 'birthday', 'student_class', 'unique_id', 'gender', 'level', 'avatar' ]
 
-    list_display = ( 'first_name', 'last_name', 'birthday', 'student_class', 'gender', 'level', 'avatar' )
+    list_display = ( 'first_name', 'last_name', 'birthday', 'student_class', 'unique_id', 'gender', 'level', 'avatar' )
 
 admin.site.register(Student, Student_Admin)
 
