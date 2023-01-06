@@ -52,8 +52,8 @@ admin.site.register(School, School_Admin)
 
 # Register Attendance model.
 class Attendance_Admin(admin.ModelAdmin):
-    fields = [ 'name', 'unique_id', 'status', 'time_in', 'time_out' ]
+    fields = [ 'name', 'unique_id', 'user_type', 'status', 'time_in', 'time_out' ]
 
-    list_display = ( 'name', 'unique_id', 'status', 'time_in', 'time_out', 'created_at', 'updated_at' )
+    list_display = ( 'name', 'unique_id', 'user_type', 'status', 'time_in', 'time_out', 'created_at', 'updated_at' )
 
 admin.site.register(Attendance, Attendance_Admin)
