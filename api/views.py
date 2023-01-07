@@ -146,13 +146,11 @@ class AttendanceViewSet(viewsets.ViewSet):
             if Attendance.objects.filter(unique_id=unique_id, user_type=user_type).exists():
                 if user_action == "Check In":
                     queryset = Attendance.objects.get(unique_id=unique_id, user_type=user_type)
-                    print("Attendance - Check In:", queryset)
                     time_now = datetime.now()
                     queryset.time_in = time_now
                     queryset.save()
                 elif user_action == "Check Out":
                     queryset = Attendance.objects.get(unique_id=unique_id, user_type=user_type)
-                    print("Attendance - Check Out:", queryset)
                     time_now = datetime.now()
                     queryset.time_out = time_now
                     queryset.save()
@@ -175,7 +173,6 @@ class AttendanceViewSet(viewsets.ViewSet):
                 request_data["time_out"] = time_out
 
                 serializer = Attendance_Serializer(data=request_data)
-                print("Serializer:", serializer.data)
 
                 if serializer.is_valid():
                     serializer.save()
