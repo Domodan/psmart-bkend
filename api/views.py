@@ -117,7 +117,7 @@ class AttendanceViewSet(viewsets.ViewSet):
         action = request.data.get("action")
         user_action = request.data.get("user_action")
         user_type = request.data.get("user_type")
-        username = request.data.get("username")
+        username = request.data.get("name")
         unique_id = request.data.get("unique_id")
 
         if action == "old":
