@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.contrib.auth.models import auth
+from django.contrib.auth.models import auth, User
 from django.contrib.auth.decorators import login_required
 
 from api.models import Attendance, Student, Teacher
@@ -38,7 +38,7 @@ def attendance_students(request):
     user_data = []
     
     for attendance in attendances:
-        if attendance.user_type == "Student":
+        if attendance.user_type == "student":
             student = Student.objects.get(first_name=attendance.name)
             print("Student Type:", type(student))
             print("Attendance Type:", type(attendance))
@@ -59,21 +59,24 @@ def attendance_students(request):
 
 @login_required
 def attendance_teahcers(request):
+    print("Teachers Attendance")
 
     attendances = Attendance.objects.all()
     user_data = []
-    
+    print("Attendance:", attendances)
     for attendance in attendances:
-        if attendance.user_type == "Student":
-            student = Student.objects.get(first_name=attendance.name)
-            print("Student Type:", type(student))
+        print("Attendee:", attendance)
+        if attendance.user_type == "teacher":
+            teacher = Teacher.objects.get(unique_id=attendance.unique_id)
+            print("Teacher Type:", type(teacher))
             print("Attendance Type:", type(attendance))
-            user_data.append(({ 'attendance': attendance, 'student': student,}))    
+            user_data.append(({ 'attendance': attendance, 'teacher': teacher,}))    
 
     for data in user_data:
-        print("Student:", data['student'])
+        print("Teacher:", data['teacher'])
         print("Attendance:", data['attendance'])
-        print("Student Name:", data['student'].first_name)
+        print("Teacher Name:", data['teacher'].first_name)
+        print("Teacher Image:", data['teacher'].avatar)
         print("Attendance Name:", data['attendance'].name)
 
     return render(request, 'core/teachers_attendance.html',
@@ -89,7 +92,7 @@ def users(request):
     return render(request, 'core/all_users.html',
         {
             'users': users,
-            'page': 'users',
+            'page': 'all_users',
         })
 
         
@@ -180,7 +183,7 @@ def students(request):
     return render(request, 'core/students.html',
         {
             'students': student,
-            'page': 'student',
+            'page': 'students',
         }
     )
 
@@ -243,7 +246,7 @@ def teachers(request):
     return render(request, 'core/teachers.html',
         {
             'teachers': teacher,
-            'page': 'teacher',
+            'page': 'teachers',
         }
     )
 
@@ -302,6 +305,13 @@ def add_teachers(request):
 @login_required
 def all_admin(request):
 
+    admins = User.objects.all()
+    for admin in admins:
+        print("Users:", admin)
+        print("First Name:", admin.first_name)
+        print("Last Name:", admin.last_name)
+        print("Last Name:", admin.profile.avatar)
+
     attendances = Attendance.objects.all()
     user_data = []
     
@@ -318,8 +328,8 @@ def all_admin(request):
         print("Student Name:", data['student'].first_name)
         print("Attendance Name:", data['attendance'].name)
 
-    return render(request, 'core/teachers.html',
+    return render(request, 'core/all_admin.html',
         {
-            'user_data': user_data,
-            'page': 'teachers',
+            'admins': admins,
+            'page': 'admins',
         })

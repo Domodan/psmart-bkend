@@ -11,7 +11,18 @@
         <meta name="author" content="dev@negecoder.com">
 
         <!-- Title -->
-        <title>PSMART | Home &amp; Dashboard</title>
+        <title>PSMART | 
+            {% if page == "admins" %}Admins
+            {% elif page == "attendance_teachers" %}Teachers Attendance
+            {% elif page == "attendance_students" %}Students Attendance
+            {% elif page == "all_users" %}Users
+            {% elif page == "teachers" %}Teachers
+            {% elif page == "students" %}Students
+            {% elif page == "add_students" %}Add Students
+            {% elif page == "add_teachers" %}Add Teachers
+            {% else %}Home &amp; Dashboard
+            {% endif %}
+        </title>
 
         {% block favicons %}
 
@@ -1006,8 +1017,8 @@
                                 </a>
 
                                 <div id="navbarVerticalMenuDashboards" class="nav-collapse collapse show" data-bs-parent="#navbarVerticalMenu">
-                                    <a class="nav-link active" href="{% url 'attendance_students' %}">Students</a>
-                                    <a class="nav-link" href="{% url 'attendance_teachers' %}">Teachers</a>
+                                    <a class="nav-link {% if page == 'attendance_students' %}active{% endif %}" href="{% url 'attendance_students' %}">Students</a>
+                                    <a class="nav-link {% if page == 'attendance_teachers' %}active{% endif %}" href="{% url 'attendance_teachers' %}">Teachers</a>
                                 </div>
                             </div>
                             <!-- End Collapse -->
@@ -1016,28 +1027,28 @@
                             <small class="bi-three-dots nav-subtitle-replacer"></small>
 
                             <div class="nav-item">
-                                <a class="nav-link" href="{% url 'all_users' %}" data-placement="left">
+                                <a class="nav-link {% if page == 'all_users' %}active{% endif %}" href="{% url 'all_users' %}" data-placement="left">
                                     <i class="bi-people-fill nav-icon"></i>
                                     <span class="nav-link-title">All</span>
                                 </a>
                             </div>
 
                             <div class="nav-item">
-                                <a class="nav-link" href="{% url 'teachers' %}" data-placement="left">
+                                <a class="nav-link {% if page == 'teachers' %}active{% endif %}" href="{% url 'teachers' %}" data-placement="left">
                                     <i class="bi-person-workspace nav-icon"></i>
                                     <span class="nav-link-title">Teachers</span>
                                 </a>
                             </div>
 
                             <div class="nav-item">
-                                <a class="nav-link" href="{% url 'students' %}" data-placement="left">
+                                <a class="nav-link {% if page == 'students' %}active{% endif %}" href="{% url 'students' %}" data-placement="left">
                                     <i class="bi-person-circle nav-icon"></i>
                                     <span class="nav-link-title">Students</span>
                                 </a>
                             </div>
 
                             <div class="nav-item">
-                                <a class="nav-link" href="{% url 'all_admin' %}" data-placement="left">
+                                <a class="nav-link {% if page == 'admins' %}active{% endif %}" href="{% url 'all_admin' %}" data-placement="left">
                                     <i class="bi-person-bounding-box nav-icon"></i>
                                     <span class="nav-link-title">Admin</span>
                                 </a>
