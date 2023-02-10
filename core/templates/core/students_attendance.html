@@ -433,8 +433,8 @@
                 </thead>
 
                 <tbody>
-                    {% if user_data %}
-                    {% for student in user_data %}
+                    {% if students %}
+                    {% for student in students %}
                     <tr>
                         <td class="table-column-pe-0">
                             <div class="form-check">
@@ -443,7 +443,7 @@
                             </div>
                         </td>
                         <td class="table-column-ps-0">
-                            <a class="d-flex align-items-center" href="user-profile.html">
+                            <a class="d-flex align-items-center" href="{% url 'student_profile' student.student.id %}">
                                 <div class="flex-shrink-0">
                                     <div class="avatar avatar-sm avatar-circle">
                                         <img class="avatar-img" src="{{ student.student.avatar.url }}" alt="Image Description">

@@ -132,7 +132,7 @@
                     </div>
                 </td>
                 <td class="table-column-ps-0">
-                    <a class="d-flex align-items-center" href="user-profile.html">
+                    <a class="d-flex align-items-center" href="{% url 'user_profile' admin.id %}">
                         <div class="avatar avatar-circle">
                             <img class="avatar-img" src="{{ admin.profile.avatar.url }}" alt="Image Description">
                         </div>

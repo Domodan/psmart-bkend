@@ -1,0 +1,373 @@
+
+{% extends "./base.html" %}
+{% load static %}
+
+{% block content %}
+  <!-- Content -->
+
+  {% if student_profile %}
+  <div class="row justify-content-lg-center">
+    <div class="col-lg-10">
+      <!-- Profile Cover -->
+      <div class="profile-cover">
+        <div class="profile-cover-img-wrapper">
+          <img class="profile-cover-img" src="{% static 'core/assets/img/1920x400/img1.jpg' %}" alt="Image Description">
+        </div>
+      </div>
+      <!-- End Profile Cover -->
+
+      <!-- Profile Header -->
+      <div class="text-center mb-5">
+        <!-- Avatar -->
+        <div class="avatar avatar-xxl avatar-circle profile-cover-avatar">
+          <img class="avatar-img" src="{{ student_profile.avatar.url }}" alt="Profile Picture | Avatar">
+          <span class="avatar-status avatar-status-success"></span>
+        </div>
+        <!-- End Avatar -->
+
+        <h1 class="page-header-title">{{ student_profile.first_name }} {{ student_profile.last_name }}<i class="bi-patch-check-fill fs-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h1>
+
+        <!-- List -->
+        <ul class="list-inline list-px-2">
+          <li class="list-inline-item">
+            <i class="bi-building me-1"></i>
+            <span>{{ student_profile.unique_id }}</span>
+          </li>
+
+          <li class="list-inline-item">
+            <i class="bi-geo-alt me-1"></i>
+            <a href="#">{{ student_profile.school }}</a>
+          </li>
+
+          <li class="list-inline-item">
+            <i class="bi-calendar-week me-1"></i>
+            <span>{{ student_profile.updated_at }}</span>
+          </li>
+        </ul>
+        <!-- End List -->
+      </div>
+      <!-- End Profile Header -->
+
+      <!-- Nav -->
+      <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5">
+        <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+          <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+            <i class="bi-chevron-left"></i>
+          </a>
+        </span>
+
+        <span class="hs-nav-scroller-arrow-next" style="display: none;">
+          <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+            <i class="bi-chevron-right"></i>
+          </a>
+        </span>
+
+        <ul class="nav nav-tabs align-items-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'student_profile' student_profile.id %}">Profile</a>
+          </li>
+
+          <!-- <li class="nav-item">
+            <a class="nav-link " href="user-profile-teams.html">Teams</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="user-profile-projects.html">Projects <span class="badge bg-soft-dark text-dark rounded-circle ms-1">3</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="user-profile-connections.html">Connections</a>
+          </li> -->
+
+          <li class="nav-item ms-auto">
+            <div class="d-flex gap-2">
+              <!-- Form Check -->
+              <div class="form-check form-check-switch">
+                <input class="form-check-input" type="checkbox" value="" id="connectCheckbox">
+                <label class="form-check-label btn-sm" for="connectCheckbox">
+                  <span class="form-check-default">
+                    <i class="bi-person-plus-fill"></i> Connect
+                  </span>
+                  <span class="form-check-active">
+                    <i class="bi-check-lg me-2"></i> Connected
+                  </span>
+                </label>
+              </div>
+              <!-- End Form Check -->
+
+              <a class="btn btn-icon btn-sm btn-white">
+                <i class="bi-list-ul me-1"></i>
+              </a>
+
+              <!-- Dropdown -->
+              <div class="dropdown nav-scroller-dropdown">
+                <button type="button" class="btn btn-white btn-icon btn-sm" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi-three-dots-vertical"></i>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="profileDropdown">
+                  <span class="dropdown-header">Settings</span>
+
+                  <a class="dropdown-item">
+                    <i class="bi-share-fill dropdown-item-icon"></i> Share profile
+                  </a>
+                  <a class="dropdown-item">
+                    <i class="bi-slash-circle dropdown-item-icon"></i> Block page and profile
+                  </a>
+                  <a class="dropdown-item">
+                    <i class="bi-info-circle dropdown-item-icon"></i> Suggest edits
+                  </a>
+
+                  <div class="dropdown-divider"></div>
+
+                  <span class="dropdown-header">Feedback</span>
+
+                  <a class="dropdown-item">
+                    <i class="bi-flag dropdown-item-icon"></i> Report
+                  </a>
+                </div>
+              </div>
+              <!-- End Dropdown -->
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- End Nav -->
+
+      <div class="row">
+        <div class="col-lg-4">
+          <!-- Card -->
+          <div class="card card-body mb-3 mb-lg-5">
+            <h5>Your attendance</h5>
+
+            <!-- Progress -->
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="progress flex-grow-1">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <span class="ms-4">82%</span>
+            </div>
+            <!-- End Progress -->
+          </div>
+          <!-- End Card -->
+
+          <!-- Sticky Block Start Point -->
+          <div id="accountSidebarNav"></div>
+
+          <!-- Card -->
+          <div class="js-sticky-block card mb-3 mb-lg-5" data-hs-sticky-block-options='{
+                  "parentSelector": "#accountSidebarNav",
+                  "breakpoint": "lg",
+                  "startPoint": "#accountSidebarNav",
+                  "endPoint": "#stickyBlockEndPoint",
+                  "stickyOffsetTop": 20
+                }'>
+            <!-- Header -->
+            <div class="card-header">
+              <h4 class="card-header-title">Profile</h4>
+            </div>
+            <!-- End Header -->
+
+            <!-- Body -->
+            <div class="card-body">
+              <ul class="list-unstyled list-py-2 text-dark mb-0">
+                <li class="pb-0"><span class="card-subtitle">About</span></li>
+                <li><i class="bi-person dropdown-item-icon"></i>{{ student_profile.first_name }} {{ student_profile.last_name }}</li>
+                <li><i class="bi-briefcase dropdown-item-icon"></i>{{ student_profile.school }}</li>
+                <li><i class="bi-building dropdown-item-icon"></i>{{ student_profile.unique_id }}</li>
+
+                <li class="pt-4 pb-0"><span class="card-subtitle">Contacts</span></li>
+                <li><i class="bi-at dropdown-item-icon"></i>{{ student_profile.student_class }}</li>
+                <li><i class="bi-phone dropdown-item-icon"></i>{{ student_profile.level }}</li>
+
+                <li class="pt-4 pb-0"><span class="card-subtitle">Teams</span></li>
+                <li><i class="bi-people dropdown-item-icon"></i> Member of {{ student_profile.student_class }}</li>
+                <li><i class="bi-stickies dropdown-item-icon"></i> Studying at {{ student_profile.school }}</li>
+              </ul>
+            </div>
+            <!-- End Body -->
+          </div>
+          <!-- End Card -->
+        </div>
+
+        <div class="col-lg-8">
+          <div class="d-grid gap-3 gap-lg-5">
+            <!-- Card -->
+            <div class="card">
+              <!-- Header -->
+              <div class="card-header card-header-content-between">
+                <h4 class="card-header-title">Attendance Summary</h4>
+
+                <!-- Dropdown -->
+                <div class="dropdowm">
+                  <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm rounded-circle" id="projectReportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi-three-dots-vertical"></i>
+                  </button>
+
+                  <div class="dropdown-menu dropdown-menu-end mt-1" aria-labelledby="projectReportDropdown">
+                    <span class="dropdown-header">Settings</span>
+
+                    <a class="dropdown-item" href="#">
+                      <i class="bi-share-fill dropdown-item-icon"></i> Share connections
+                    </a>
+                    <a class="dropdown-item" href="#">
+                      <i class="bi-info-circle dropdown-item-icon"></i> Suggest edits
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <span class="dropdown-header">Feedback</span>
+
+                    <a class="dropdown-item" href="#">
+                      <i class="bi-chat-left-dots dropdown-item-icon"></i> Report
+                    </a>
+                  </div>
+                </div>
+                <!-- End Dropdown -->
+              </div>
+              <!-- End Header -->
+
+              <!-- Table -->
+              <div class="table-responsive">
+                <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                  <thead class="thead-light">
+                    <tr>
+                      <th>Subjects</th>
+                      <th style="width: 40%;">Attendance</th>
+                      <th class="table-text-end">Hours spent</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="d-flex">
+                          <img class="avatar avatar-xs" src="{% static 'core/assets/svg/brands/spec-icon.svg' %}" alt="Image Description">
+                          <div class="ms-3">
+                            <h5 class="mb-0">English</h5>
+                            <small>Updated 1 day ago</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <span class="me-3">45%</span>
+                          <div class="progress table-progress">
+                            <div class="progress-bar" role="progressbar" style="width: 45%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="table-text-end">18:42</td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="d-flex">
+                          <img class="avatar avatar-xs" src="{% static 'core/assets/svg/brands/capsule-icon.svg' %}" alt="Image Description">
+                          <div class="ms-3">
+                            <h5 class="mb-0">Mathematics</h5>
+                            <small>Updated 2 days ago</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <span class="me-3">59%</span>
+                          <div class="progress table-progress">
+                            <div class="progress-bar" role="progressbar" style="width: 59%" aria-valuenow="59" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="table-text-end">9:01</td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="d-flex">
+                          <img class="avatar avatar-xs" src="{% static 'core/assets/svg/brands/figma-icon.svg' %}" alt="Image Description">
+                          <div class="ms-3">
+                            <h5 class="mb-0">Science</h5>
+                            <small>Updated 1 week ago</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <span class="me-3">100%</span>
+                          <div class="progress table-progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="table-text-end">24:12</td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="d-flex">
+                          <img class="avatar avatar-xs" src="{% static 'core/assets/svg/brands/mailchimp-icon.svg' %}" alt="Image Description">
+                          <div class="ms-3">
+                            <h5 class="mb-0">Social Studies (SST)</h5>
+                            <small>Updated 2 days ago</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <span class="me-3">57%</span>
+                          <div class="progress table-progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 57%" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="table-text-end">0:37</td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        <div class="d-flex">
+                          <span class="avatar avatar-xs avatar-soft-info avatar-circle">
+                            <span class="avatar-initials">R</span>
+                          </span>
+                          <div class="ms-3">
+                            <h5 class="mb-0">Religious Education and/or Islam</h5>
+                            <small>Updated 1 week ago</small>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <span class="me-3">0%</span>
+                          <div class="progress table-progress">
+                            <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="table-text-end">8:08</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- End Table -->
+
+              <!-- Footer -->
+              <a class="card-footer text-center" href="{% url 'student_profile' student_profile.id %}">
+                View all subjects <i class="bi-chevron-right"></i>
+              </a>
+              <!-- End Footer -->
+            </div>
+            <!-- End Card -->
+
+            <!-- End Row -->
+          </div>
+
+          <!-- Sticky Block End Point -->
+          <div id="stickyBlockEndPoint"></div>
+        </div>
+      </div>
+      <!-- End Row -->
+    </div>
+    <!-- End Col -->
+  </div>
+  <!-- End Row -->
+  {% endif %}
+  <!-- End Content -->
+{% endblock %}

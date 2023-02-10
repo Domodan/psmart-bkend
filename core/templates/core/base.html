@@ -20,6 +20,7 @@
             {% elif page == "students" %}Students
             {% elif page == "add_students" %}Add Students
             {% elif page == "add_teachers" %}Add Teachers
+            {% elif page == "user_profile" %}User Profile
             {% else %}Home &amp; Dashboard
             {% endif %}
         </title>
@@ -162,7 +163,7 @@
         </script>
     </head>
 
-    <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl   footer-offset">
+    <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl footer-offset">
 
         <script src="{% static '/core/assets/js/theme_appearance.js' %}"></script>
 
@@ -1017,8 +1018,8 @@
                                 </a>
 
                                 <div id="navbarVerticalMenuDashboards" class="nav-collapse collapse show" data-bs-parent="#navbarVerticalMenu">
-                                    <a class="nav-link {% if page == 'attendance_students' %}active{% endif %}" href="{% url 'attendance_students' %}">Students</a>
-                                    <a class="nav-link {% if page == 'attendance_teachers' %}active{% endif %}" href="{% url 'attendance_teachers' %}">Teachers</a>
+                                    <a class="nav-link {% if page == 'attendance_students' %}active{% endif %}" href="{% url 'attendance' 'students' %}">Students</a>
+                                    <a class="nav-link {% if page == 'attendance_teachers' %}active{% endif %}" href="{% url 'attendance' 'teachers' %}">Teachers</a>
                                 </div>
                             </div>
                             <!-- End Collapse -->
@@ -1058,12 +1059,12 @@
                             <small class="bi-three-dots nav-subtitle-replacer"></small>
 
                             <div class="nav-item">
-                                <a class="nav-link" href="user-profile-my-profile.html" data-placement="left">
+                                <a class="nav-link" href="{% url 'user_profile' 2 %}" data-placement="left">
                                     <i class="bi-person-rolodex nav-icon"></i>
                                     <span class="nav-link-title">My Profile</span>
                                 </a>
                             </div>
-
+<!-- 
                             <div class="nav-item">
                                 <a class="nav-link" href="user-profile-teams.html" data-placement="left">
                                     <i class="bi-wallet-fill nav-icon"></i>
@@ -1084,7 +1085,7 @@
                                     <i class="bi-eye-fill nav-icon"></i>
                                     <span class="nav-link-title">Overview</span>
                                 </a>
-                            </div>
+                            </div> -->
 
                             <span class="dropdown-header mt-4">Others</span>
                             <small class="bi-three-dots nav-subtitle-replacer"></small>
@@ -1100,13 +1101,6 @@
                                 <a class="nav-link " href="{% url 'add_user' %}" data-placement="left">
                                     <i class="bi-file-lock-fill nav-icon"></i>
                                     <span class="nav-link-title">Add User</span>
-                                </a>
-                            </div>
-
-                            <div class="nav-item">
-                                <a class="nav-link " href="landing.html" data-placement="left">
-                                <i class="bi-ui-checks-grid nav-icon"></i>
-                                <span class="nav-link-title">Landing Page <span class="badge bg-info rounded-pill ms-1">New</span></span>
                                 </a>
                             </div>
                             <!-- End Collapse -->

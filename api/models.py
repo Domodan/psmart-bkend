@@ -6,6 +6,28 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 
+# Subjects.
+class Subjects:
+    english = "English"
+    math = "Mathematics"
+    science = "Science"
+    sst = "Social Studies"
+
+    CHOICES = (
+        ("ENG", english),
+        ("MTC", math),
+        ("SCI", science),
+        ("SST", sst)
+    )
+
+# Subjects models 
+class Subject(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
 # Users models | Profile.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -37,10 +59,16 @@ class Teacher(models.Model):
     unique_id = models.CharField(max_length=50, default="2022/TR/1")
     email = models.EmailField(max_length=50, blank=True)
     phone = models.CharField(max_length=15)
+    school = models.CharField(max_length=50, default="Makerere Primary")
     subject = models.CharField(max_length=20)
+    subject2 = models.CharField(max_length=20, choices=Subjects.CHOICES, default=Subjects.english)
+    subject3 = models.ManyToManyField(to="api.Subject", related_name="teachers", verbose_name="Subjects")
     gender = models.CharField(max_length=50)
     avatar = models.ImageField(upload_to="teacher", default="user.png")
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.first_name
 
     class Meta:
         verbose_name = "Teacher"
@@ -55,10 +83,14 @@ class Student(models.Model):
     unique_id = models.CharField(max_length=50, default="2022/STD/1")
     birthday = models.DateField()
     student_class = models.CharField(max_length=20)
+    school = models.CharField(max_length=50, default="Makerere Primary")
     level = models.CharField(max_length=20)
     gender = models.CharField(max_length=50)
     avatar = models.ImageField(upload_to="student", default="user.png")
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.first_name
 
     class Meta:
         verbose_name = "Student"
@@ -72,9 +104,13 @@ class Attendance(models.Model):
     unique_id = models.CharField(max_length=50, default="2022/TR/10")
     user_type = models.CharField(max_length=10, default="Student") # Student | Teacher
     status = models.CharField(max_length=10, default="Absent") # Present | Absent | Late
+    subject = models.CharField(max_length=20, default="English")
     time_in = models.DateTimeField()
     time_out = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.name
 
     class Meta:
         verbose_name = "Attendance"

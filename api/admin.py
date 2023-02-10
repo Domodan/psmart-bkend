@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from api.models import Attendance, Profile, School, Student, Teacher
+from api.models import Attendance, Profile, School, Student, Teacher, Subject
 
 
 # Define an inline admin descriptor for Employee model
@@ -23,11 +23,26 @@ admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
 
+# Register Subject model.
+class Subject_Admin(admin.ModelAdmin):
+    fields = [ 'name', ]
+
+    list_display = ( 'name',)
+
+admin.site.register(Subject, Subject_Admin)
+
+
+
+
 # Register Teacher model.
 class Teacher_Admin(admin.ModelAdmin):
-    fields = [ 'first_name', 'last_name', 'phone', 'subject', 'unique_id', 'gender', 'avatar' ]
+    fields = [ 'first_name', 'last_name', 'phone', 'subject', 'subject2', 'subject3', 'unique_id', 'gender', 'avatar' ]
 
-    list_display = ( 'first_name', 'last_name', 'phone', 'subject', 'unique_id', 'gender', 'avatar' )
+    list_display = ( 'first_name', 'last_name', 'phone', 'subject', 'subject2', 'get_subject', 'unique_id', 'gender', 'avatar' )
+
+
+    def get_subject(self, obj):
+        return [subject.name for subject in obj.subject3.all()]
 
 admin.site.register(Teacher, Teacher_Admin)
 

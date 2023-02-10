@@ -32,58 +32,74 @@ def sign_up(request):
 
 
 @login_required
-def attendance_students(request):
+def attendance(request, user_type=None):
 
-    attendances = Attendance.objects.all()
     user_data = []
-    
-    for attendance in attendances:
-        if attendance.user_type == "student":
+    user_data2 = {}
+
+    if user_type == "students":
+        attendances = Attendance.objects.filter(user_type = "student")
+        for attendance in attendances:
             student = Student.objects.get(first_name=attendance.name)
-            print("Student Type:", type(student))
-            print("Attendance Type:", type(attendance))
-            user_data.append(({ 'attendance': attendance, 'student': student,}))    
-
-    for data in user_data:
-        print("Student:", data['student'])
-        print("Attendance:", data['attendance'])
-        print("Student Name:", data['student'].first_name)
-        print("Attendance Name:", data['attendance'].name)
-
-    return render(request, 'core/students_attendance.html',
-        {
-            'user_data': user_data,
-            'page': 'attendance_students',
-        })
-
-
-@login_required
-def attendance_teahcers(request):
-    print("Teachers Attendance")
-
-    attendances = Attendance.objects.all()
-    user_data = []
-    print("Attendance:", attendances)
-    for attendance in attendances:
-        print("Attendee:", attendance)
-        if attendance.user_type == "teacher":
+            user_data.append(({ 'attendance': attendance, 'student': student,}))
+        return render(request, 'core/students_attendance.html',
+            {
+                'students': user_data,
+                'page': 'attendance_students',
+            })
+    elif user_type == "teachers":
+        attendances = Attendance.objects.filter(user_type = "teacher")
+        print("Attendancesss:", attendances)
+        for attendance in attendances:
+            print("Attendance:", attendance)
             teacher = Teacher.objects.get(unique_id=attendance.unique_id)
-            print("Teacher Type:", type(teacher))
-            print("Attendance Type:", type(attendance))
-            user_data.append(({ 'attendance': attendance, 'teacher': teacher,}))    
+            print("Teacher:", teacher)
+            print("First Name:", teacher.first_name)
+            print("Subject:", teacher.subject)
+            print("Subject2:", teacher.subject2)
+            # for s in teacher.subject3.all():
+            #     print("Subject3:", s.name)
+            user_data.append(({ 'attendance': attendance, 'teacher': teacher}))
+            # user_data2[0] = { 'attendance': attendance, 'teacher': teacher}
+            user_data2['attendance'] = attendance
+            user_data2['teacher'] = teacher
 
-    for data in user_data:
-        print("Teacher:", data['teacher'])
-        print("Attendance:", data['attendance'])
-        print("Teacher Name:", data['teacher'].first_name)
-        print("Teacher Image:", data['teacher'].avatar)
-        print("Attendance Name:", data['attendance'].name)
+        print("User Data:", user_data)
+        print("User Data2:", user_data2)
+        # print("User Data2 Attendance:", user_data2.attendance)
+        
+        for teacher in user_data:
+            print("Teacher:", teacher)
+            print("Teacher Name:", teacher['teacher'].id)
+            print("Attendance Name:", teacher['attendance'].id)
+        return render(request, 'core/teachers_attendance.html',
+            {
+                'teachers': user_data,
+                'page': 'attendance_teachers',
+            })
 
-    return render(request, 'core/teachers_attendance.html',
-        {
-            'user_data': user_data,
-            'page': 'attendance_teachers',
-        })
+    # else:
+    #     attendances = Attendance.objects.all()
+    #     user_data = []
+        
+    #     for attendance in attendances:
+    #         if attendance.user_type == "student":
+    #             student = Student.objects.get(first_name=attendance.name)
+    #             print("Student Type:", type(student))
+    #             print("Attendance Type:", type(attendance))
+    #             user_data.append(({ 'attendance': attendance, 'student': student,}))    
+
+    #     for data in user_data:
+    #         print("Student:", data['student'])
+    #         print("Attendance:", data['attendance'])
+    #         print("Student Name:", data['student'].first_name)
+    #         print("Attendance Name:", data['attendance'].name)
+
+    #     return render(request, 'core/students_attendance.html',
+    #         {
+    #             'user_data': user_data,
+    #             'page': 'attendance_students',
+    #         })
 
 
 @login_required      
@@ -106,7 +122,7 @@ def sign_in(request):
         if user is not None:
             auth.login(request, user)
             request.session['admin_id'] = user.id
-            return redirect('attendance_students')
+            return redirect('students')
         else:
             messages.info(request, 'Invalid Username or Password')
             return redirect('sign_in')
@@ -333,3 +349,50 @@ def all_admin(request):
             'admins': admins,
             'page': 'admins',
         })
+
+
+@login_required
+def user_profile(request, pk=None):
+    print("PK:", pk)
+    user_profile = User.objects.get(pk=pk)
+    
+    print("User Profile:", user_profile)
+    print("User ID:", user_profile.id)
+    print("Avatar:", user_profile.profile.avatar)
+
+    return render(request, 'core/user_profile.html',
+    {
+        'user_profile': user_profile,
+        'page': 'user_profile'
+    })
+
+@login_required
+def teacher_profile(request, pk=None):
+    print("PK:", pk)
+    teacher_profile = Teacher.objects.get(pk=pk)
+    
+    print("Teacher Profile:", teacher_profile)
+    print("Teacher ID:", teacher_profile.id)
+    print("Avatar:", teacher_profile.avatar)
+
+    return render(request, 'core/teacher_profile.html',
+    {
+        'teacher_profile': teacher_profile,
+        'page': 'teacher_profile'
+    })
+
+@login_required
+def student_profile(request, pk=None):
+    print("PK:", pk)
+    student_profile = Student.objects.get(pk=pk)
+    
+    print("Student Profile:", student_profile)
+    print("Student ID:", student_profile.id)
+    print("Avatar:", student_profile.avatar)
+
+    return render(request, 'core/student_profile.html',
+    {
+        'student_profile': student_profile,
+        'page': 'student_profile'
+    })
+

@@ -433,36 +433,36 @@
                 </thead>
 
                 <tbody>
-                    {% if user_data %}
-                    {% for teacher in user_data %}
-                    <tr>
-                        <td class="table-column-pe-0">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="usersDataCheck2">
-                                <label class="form-check-label" for="usersDataCheck2"></label>
-                            </div>
-                        </td>
-                        <td class="table-column-ps-0">
-                            <a class="d-flex align-items-center" href="user-profile.html">
-                                <div class="flex-shrink-0">
-                                    <div class="avatar avatar-sm avatar-circle">
-                                        <img class="avatar-img" src="{{ teacher.teacher.avatar.url }}" alt="Image Description">
+                    {% if teachers %}
+                        {% for teacher in teachers %}
+                            <tr>
+                                <td class="table-column-pe-0">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="usersDataCheck2">
+                                        <label class="form-check-label" for="usersDataCheck2"></label>
                                     </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h5 class="text-inherit mb-0">{{ teacher.attendance.name }} <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h5>
-                                </div>
-                            </a>
-                        </td>
-                        <td>
-                            <span class="legend-indicator bg-success"></span>{{ teacher.attendance.status }}
-                        </td>
-                        <td>{{ teacher.attendance.user_type }}</td>
-                        <td>amanda@site.com</td>
-                        <td>{{ teacher.attendance.time_in }}</td>
-                        <td>{{ teacher.attendance.time_out }}</td>
-                    </tr>
-                    {% endfor %}
+                                </td>
+                                <td class="table-column-ps-0">
+                                    <a class="d-flex align-items-center" href="{% url 'teacher_profile' teacher.teacher.id %}">
+                                        <div class="flex-shrink-0">
+                                            <div class="avatar avatar-sm avatar-circle">
+                                                <img class="avatar-img" src="{{ teacher.teacher.avatar.url }}" alt="Image Description">
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h5 class="text-inherit mb-0">{{ teacher.attendance.name }} <i class="bi-patch-check-fill text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Top endorsed"></i></h5>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="legend-indicator bg-success"></span>{{ teacher.attendance.status }}
+                                </td>
+                                <td>{{ teacher.attendance.user_type }}</td>
+                                <td>amanda@site.com</td>
+                                <td>{{ teacher.attendance.time_in }}</td>
+                                <td>{{ teacher.attendance.time_out }}</td>
+                            </tr>
+                        {% endfor %}
                     {% endif %}
 
                     <tr>
@@ -623,8 +623,8 @@
                                         "searchInDropdown": false,
                                         "hideSearch": true
                                     }'>
-                                <option value="4">4</option>
-                                <option value="6" selected>6</option>
+                                <option value="4" selected>4</option>
+                                <option value="6">6</option>
                                 <option value="8">8</option>
                                 <option value="12">12</option>
                             </select>
