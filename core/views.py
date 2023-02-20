@@ -35,7 +35,6 @@ def sign_up(request):
 def attendance(request, user_type=None):
 
     user_data = []
-    user_data2 = {}
 
     if user_type == "students":
         attendances = Attendance.objects.filter(user_type = "student")
@@ -49,57 +48,14 @@ def attendance(request, user_type=None):
             })
     elif user_type == "teachers":
         attendances = Attendance.objects.filter(user_type = "teacher")
-        print("Attendancesss:", attendances)
         for attendance in attendances:
-            print("Attendance:", attendance)
             teacher = Teacher.objects.get(unique_id=attendance.unique_id)
-            print("Teacher:", teacher)
-            print("First Name:", teacher.first_name)
-            print("Subject:", teacher.subject)
-            print("Subject2:", teacher.subject2)
-            # for s in teacher.subject3.all():
-            #     print("Subject3:", s.name)
             user_data.append(({ 'attendance': attendance, 'teacher': teacher}))
-            # user_data2[0] = { 'attendance': attendance, 'teacher': teacher}
-            user_data2['attendance'] = attendance
-            user_data2['teacher'] = teacher
-
-        print("User Data:", user_data)
-        print("User Data2:", user_data2)
-        # print("User Data2 Attendance:", user_data2.attendance)
-        
-        for teacher in user_data:
-            print("Teacher:", teacher)
-            print("Teacher Name:", teacher['teacher'].id)
-            print("Attendance Name:", teacher['attendance'].id)
         return render(request, 'core/teachers_attendance.html',
             {
                 'teachers': user_data,
                 'page': 'attendance_teachers',
             })
-
-    # else:
-    #     attendances = Attendance.objects.all()
-    #     user_data = []
-        
-    #     for attendance in attendances:
-    #         if attendance.user_type == "student":
-    #             student = Student.objects.get(first_name=attendance.name)
-    #             print("Student Type:", type(student))
-    #             print("Attendance Type:", type(attendance))
-    #             user_data.append(({ 'attendance': attendance, 'student': student,}))    
-
-    #     for data in user_data:
-    #         print("Student:", data['student'])
-    #         print("Attendance:", data['attendance'])
-    #         print("Student Name:", data['student'].first_name)
-    #         print("Attendance Name:", data['attendance'].name)
-
-    #     return render(request, 'core/students_attendance.html',
-    #         {
-    #             'user_data': user_data,
-    #             'page': 'attendance_students',
-    #         })
 
 
 @login_required      
@@ -368,12 +324,12 @@ def user_profile(request, pk=None):
 
 @login_required
 def teacher_profile(request, pk=None):
-    print("PK:", pk)
     teacher_profile = Teacher.objects.get(pk=pk)
-    
-    print("Teacher Profile:", teacher_profile)
-    print("Teacher ID:", teacher_profile.id)
-    print("Avatar:", teacher_profile.avatar)
+    unique_id = teacher_profile.unique_id
+    attendances = Attendance.objects.filter(user_type = "teacher", unique_id=unique_id)
+
+    print("Unique ID:", unique_id)
+    print("Attendances:", attendances)
 
     return render(request, 'core/teacher_profile.html',
     {
