@@ -46,6 +46,9 @@ class School(models.Model):
     district = models.CharField(max_length=50)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self) -> str:
+        return self.name
+
     class Meta:
         verbose_name = "School"
         verbose_name_plural = "School"
@@ -115,6 +118,30 @@ class Attendance(models.Model):
     class Meta:
         verbose_name = "Attendance"
         verbose_name_plural = "Attendance"
+
+
+# Timetable Schedule models
+class Timetable(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=50, verbose_name="Event Title")
+    guestsField = models.ForeignKey(Teacher, on_delete=models.CASCADE,
+                                    verbose_name="teacher", related_name="teacher")
+    eventDescriptionLabel = models.CharField(max_length=50, verbose_name="Description")
+    eventLocationLabel = models.CharField(max_length=20, verbose_name="Venue")
+    repeatField = models.CharField(max_length=10, verbose_name="Repeat Field")
+    image = models.ImageField(upload_to="timetable", default="figma-icon.svg")
+    className = models.CharField(max_length=50, verbose_name="Class Theme", default="fullcalendar-custom-event-holidays")
+    start = models.DateTimeField(verbose_name="Start Time")
+    end = models.DateTimeField(verbose_name="End Time")
+    allDays = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.title
+
+    class Meta:
+        verbose_name = "Timetable"
+        verbose_name_plural = "Timetable"
 
 
 # Post Save Signals

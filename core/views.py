@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import auth, User
 from django.contrib.auth.decorators import login_required
 
-from api.models import Attendance, Student, Teacher
+from api.models import Attendance, Student, Teacher, Timetable
 from core.forms import Student_Form, Teacher_Form
 
 
@@ -351,4 +351,14 @@ def student_profile(request, pk=None):
         'student_profile': student_profile,
         'page': 'student_profile'
     })
+
+
+def calendar(request):
+    calendar = Timetable.objects.all()
+
+    return render(request, 'core/calendar.html',
+        {
+            'page': 'calendar',
+            'calendar': calendar,
+        })
 

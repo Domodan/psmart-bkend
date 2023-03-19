@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from api.models import Attendance, Profile, School, Student, Teacher, Subject
+from api.models import Attendance, Profile, School, Student, Teacher, Subject, Timetable
 
 
 # Define an inline admin descriptor for Employee model
@@ -33,12 +33,13 @@ admin.site.register(Subject, Subject_Admin)
 
 
 
-
 # Register Teacher model.
 class Teacher_Admin(admin.ModelAdmin):
     fields = [ 'first_name', 'last_name', 'phone', 'subject', 'subject2', 'subject3', 'unique_id', 'gender', 'avatar' ]
 
-    list_display = ( 'first_name', 'last_name', 'phone', 'subject', 'subject2', 'get_subject', 'unique_id', 'gender', 'avatar' )
+    list_display = (
+        'first_name', 'last_name', 'phone', 'subject', 'subject2', 'get_subject', 'unique_id', 'gender', 'avatar'
+    )
 
 
     def get_subject(self, obj):
@@ -72,3 +73,18 @@ class Attendance_Admin(admin.ModelAdmin):
     list_display = ( 'name', 'unique_id', 'user_type', 'status', 'time_in', 'time_out', 'created_at', 'updated_at' )
 
 admin.site.register(Attendance, Attendance_Admin)
+
+
+# Register Timetable model.
+class Timetable_Admin(admin.ModelAdmin):
+    fields = [
+        'title', 'guestsField', 'eventDescriptionLabel', 'eventLocationLabel', 'repeatField',
+        'image', 'className', 'start', 'end'
+    ]
+
+    list_display = (
+        'title', 'guestsField', 'eventDescriptionLabel', 'eventLocationLabel', 'repeatField',
+        'image', 'className', 'start', 'end', 'created_at', 'updated_at'
+    )
+
+admin.site.register(Timetable, Timetable_Admin)

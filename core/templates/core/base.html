@@ -21,6 +21,7 @@
             {% elif page == "add_students" %}Add Students
             {% elif page == "add_teachers" %}Add Teachers
             {% elif page == "user_profile" %}User Profile
+            {% elif page == "calendar" %}Calendar
             {% else %}Home &amp; Dashboard
             {% endif %}
         </title>
@@ -1087,6 +1088,16 @@
                                 </a>
                             </div> -->
 
+                            <span class="dropdown-header mt-4">APPs</span>
+                            <small class="bi-three-dots nav-subtitle-replacer"></small>
+
+                            <div class="nav-item">
+                                <a class="nav-link " href="{% url 'calendar' %}" data-placement="left">
+                                    <i class="bi-calendar-week nav-icon"></i>
+                                    <span class="nav-link-title">Calendar</span>
+                                </a>
+                            </div>
+
                             <span class="dropdown-header mt-4">Others</span>
                             <small class="bi-three-dots nav-subtitle-replacer"></small>
 
@@ -1527,6 +1538,9 @@
                 })
             })()
         </script>
+
+        {% block extra_block %}
+        {% endblock %}
 
         <!-- End Style Switcher JS -->
     </body>

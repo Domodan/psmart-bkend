@@ -25,69 +25,108 @@
     <!-- Card -->
     <div class="card">
       <!-- Header -->
-      <div class="card-header card-header-content-md-between">
-        <div class="mb-2 mb-md-0">
-          <form>
-            <!-- Search -->
-            <div class="input-group input-group-merge input-group-flush">
-              <div class="input-group-prepend input-group-text">
-                <i class="bi-search"></i>
+        <div class="card-header">
+          <div class="row justify-content-between align-items-center flex-grow-1">
+              <div class="col-md">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <h4 class="card-header-title">Students</h4>
+
+                      <!-- Datatable Info -->
+                      <div id="datatableCounterInfo" style="display: none;">
+                          <div class="d-flex align-items-center">
+                              <span class="fs-6 me-3">
+                                  <span id="datatableCounter">0</span>
+                                  Selected
+                              </span>
+                              <a class="btn btn-outline-danger btn-sm" href="javascript:;">
+                                  <i class="tio-delete-outlined"></i> Delete
+                              </a>
+                          </div>
+                      </div>
+                      <!-- End Datatable Info -->
+                  </div>
               </div>
-              <input id="datatableSearch" type="search" class="form-control" placeholder="Search students" aria-label="Search students">
-            </div>
-            <!-- End Search -->
-          </form>
-        </div>
+              <!-- End Col -->
 
-        <div class="d-grid d-sm-flex justify-content-md-end align-items-sm-center gap-2">
-          <!-- Datatable Info -->
-          <div id="datatableCounterInfo" style="display: none;">
-            <div class="d-flex align-items-center">
-              <span class="fs-5 me-3">
-                <span id="datatableCounter">0</span>
-                Selected
-              </span>
-              <a class="btn btn-outline-danger btn-sm" href="javascript:;">
-                <i class="bi-trash"></i> Delete
-              </a>
-            </div>
+              <div class="col-auto">
+                  <!-- Filter -->
+                  <div class="row align-items-sm-center">
+                      <div class="col-sm-auto">
+                          <div class="row align-items-center gx-0">
+                              <div class="col">
+                                  <span class="text-secondary me-2">Status:</span>
+                              </div>
+                              <!-- End Col -->
+
+                              <div class="col-auto">
+                                  <!-- Select -->
+                                  <div class="tom-select-custom tom-select-custom-end">
+                                      <select class="js-select js-datatable-filter form-select form-select-sm form-select-borderless" data-target-column-index="2" data-target-table="datatable" autocomplete="off" data-hs-tom-select-options='{
+                                              "searchInDropdown": false,
+                                              "hideSearch": true,
+                                              "dropdownWidth": "10rem"
+                                              }'>
+                                          <option value="null" selected>All</option>
+                                          <option value="present">Present</option>
+                                          <option value="Absent">Absent</option>
+                                          <option value="unknown">Unknown</option>
+                                          <option value="S.6">S.6</option>
+                                      </select>
+                                  </div>
+                                  <!-- End Select -->
+                              </div>
+                              <!-- End Col -->
+                          </div>
+                          <!-- End Row -->
+                      </div>
+                      <!-- End Col -->
+
+                      <div class="col-sm-auto">
+                          <div class="row align-items-center gx-0">
+                              <div class="col">
+                                  <span class="text-secondary me-2">Signed up:</span>
+                              </div>
+                              <!-- End Col -->
+
+                              <div class="col-auto">
+                                  <!-- Select -->
+                                  <div class="tom-select-custom tom-select-custom-end">
+                                      <select class="js-select js-datatable-filter form-select form-select-sm form-select-borderless" data-target-column-index="5" data-target-table="datatable" autocomplete="off" data-hs-tom-select-options='{
+                                              "searchInDropdown": false,
+                                              "hideSearch": true,
+                                              "dropdownWidth": "10rem"
+                                              }'>
+                                          <option value="null" selected>All</option>
+                                          <option value="1 year ago">1 year ago</option>
+                                          <option value="6 months ago">6 months ago</option>
+                                      </select>
+                                  </div>
+                                  <!-- End Select -->
+                              </div>
+                              <!-- End Col -->
+                          </div>
+                          <!-- End Row -->
+                      </div>
+                      <!-- End Col -->
+
+                      <div class="col-md">
+                          <form>
+                              <!-- Search -->
+                              <div class="input-group input-group-merge input-group-flush">
+                                  <div class="input-group-prepend input-group-text">
+                                      <i class="bi-search"></i>
+                                  </div>
+                                  <input id="datatableSearch" type="search" class="form-control" placeholder="Search users" aria-label="Search users">
+                              </div>
+                              <!-- End Search -->
+                          </form>
+                      </div>
+                      <!-- End Col -->
+                  </div>
+                  <!-- End Filter -->
+              </div>
+              <!-- End Col -->
           </div>
-          <!-- End Datatable Info -->
-
-          <!-- Dropdown -->
-          <div class="dropdown">
-            <button type="button" class="btn btn-white btn-sm dropdown-toggle w-100" id="usersExportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi-download me-2"></i> Export
-            </button>
-
-            <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="usersExportDropdown">
-              <span class="dropdown-header">Options</span>
-              <a id="export-copy" class="dropdown-item" href="javascript:;">
-                <img class="avatar avatar-xss avatar-4x3 me-2" src="{% static 'core/assets/svg/illustrations/copy-icon.svg' %}" alt="Image Description">
-                Copy
-              </a>
-              <a id="export-print" class="dropdown-item" href="javascript:;">
-                <img class="avatar avatar-xss avatar-4x3 me-2" src="{% static 'core/assets/svg/illustrations/print-icon.svg' %}" alt="Image Description">
-                Print
-              </a>
-              <div class="dropdown-divider"></div>
-              <span class="dropdown-header">Download options</span>
-              <a id="export-excel" class="dropdown-item" href="javascript:;">
-                <img class="avatar avatar-xss avatar-4x3 me-2" src="{% static 'core/assets/svg/brands/excel-icon.svg' %}" alt="Image Description">
-                Excel
-              </a>
-              <a id="export-csv" class="dropdown-item" href="javascript:;">
-                <img class="avatar avatar-xss avatar-4x3 me-2" src="{% static 'core/assets/svg/components/placeholder-csv-format.svg' %}" alt="Image Description">
-                .CSV
-              </a>
-              <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                <img class="avatar avatar-xss avatar-4x3 me-2" src="{% static 'core/assets/svg/brands/pdf-icon.svg' %}" alt="Image Description">
-                PDF
-              </a>
-            </div>
-          </div>
-          <!-- End Dropdown -->
-        </div>
       </div>
       <!-- End Header -->
 
