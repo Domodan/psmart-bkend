@@ -18,5 +18,6 @@ urlpatterns = [
     path('user_profile/<int:pk>', user_profile, name='user_profile'),
     path('teacher_profile/<int:pk>', teacher_profile, name='teacher_profile'),
     path('student_profile/<int:pk>', student_profile, name='student_profile'),
+    path('timetable', get_timetable_events, name='timetable'),
     path('calendar', calendar, name='calendar'),
 ]

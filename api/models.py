@@ -22,10 +22,16 @@ class Subjects:
 
 # Subjects models 
 class Subject(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=20)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Subject"
+        verbose_name_plural = "Subject"
 
 
 # Users models | Profile.
@@ -41,7 +47,7 @@ class Profile(models.Model):
 class School(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=50)
-    level = models.CharField(max_length=20)
+    type = models.CharField(max_length=20, verbose_name="School Type", help_text="e.g. Primary or Secondary")
     headteacher = models.CharField(max_length=20, blank=True)
     district = models.CharField(max_length=50)
     updated_at = models.DateTimeField(auto_now=True)
@@ -63,9 +69,7 @@ class Teacher(models.Model):
     email = models.EmailField(max_length=50, blank=True)
     phone = models.CharField(max_length=15)
     school = models.CharField(max_length=50, default="Makerere Primary")
-    subject = models.CharField(max_length=20)
-    subject2 = models.CharField(max_length=20, choices=Subjects.CHOICES, default=Subjects.english)
-    subject3 = models.ManyToManyField(to="api.Subject", related_name="teachers", verbose_name="Subjects")
+    subject = models.ManyToManyField(to="api.Subject", related_name="teachers", verbose_name="Subjects")
     gender = models.CharField(max_length=50)
     avatar = models.ImageField(upload_to="teacher", default="user.png")
     updated_at = models.DateTimeField(auto_now=True)

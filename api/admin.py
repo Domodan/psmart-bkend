@@ -27,7 +27,7 @@ admin.site.register(User, UserAdmin)
 class Subject_Admin(admin.ModelAdmin):
     fields = [ 'name', ]
 
-    list_display = ( 'name',)
+    list_display = ( 'name', 'created_at', 'updated_at' )
 
 admin.site.register(Subject, Subject_Admin)
 
@@ -35,42 +35,51 @@ admin.site.register(Subject, Subject_Admin)
 
 # Register Teacher model.
 class Teacher_Admin(admin.ModelAdmin):
-    fields = [ 'first_name', 'last_name', 'phone', 'subject', 'subject2', 'subject3', 'unique_id', 'gender', 'avatar' ]
+    fields = [
+        'first_name', 'last_name', 'phone', 'subject', 'unique_id', 'gender', 'avatar'
+    ]
 
     list_display = (
-        'first_name', 'last_name', 'phone', 'subject', 'subject2', 'get_subject', 'unique_id', 'gender', 'avatar'
+        'first_name', 'last_name', 'phone', 'get_subject', 'unique_id', 'gender', 'avatar'
     )
 
 
     def get_subject(self, obj):
-        return [subject.name for subject in obj.subject3.all()]
+        return [subject.name for subject in obj.subject.all()]
 
 admin.site.register(Teacher, Teacher_Admin)
 
 
 # Register Student model.
 class Student_Admin(admin.ModelAdmin):
-    fields = [ 'first_name', 'last_name', 'birthday', 'student_class', 'unique_id', 'gender', 'level', 'avatar' ]
+    fields = [
+        'first_name', 'last_name', 'birthday', 'student_class', 'unique_id', 'gender', 'level', 'avatar'
+    ]
 
-    list_display = ( 'first_name', 'last_name', 'birthday', 'student_class', 'unique_id', 'gender', 'level', 'avatar' )
+    list_display = (
+        'first_name', 'last_name', 'birthday', 'student_class', 'unique_id', 'gender', 'level', 'avatar'
+    )
 
 admin.site.register(Student, Student_Admin)
 
 
 # Register School model.
 class School_Admin(admin.ModelAdmin):
-    fields = [ 'name', 'level', 'headteacher', 'district' ]
+    fields = [ 'name', 'type', 'headteacher', 'district' ]
 
-    list_display = ( 'name', 'level', 'headteacher', 'district' )
+    list_display = ( 'name', 'type', 'headteacher', 'district' )
 
 admin.site.register(School, School_Admin)
 
 
 # Register Attendance model.
 class Attendance_Admin(admin.ModelAdmin):
-    fields = [ 'name', 'unique_id', 'user_type', 'status', 'time_in', 'time_out' ]
+    fields = [ 'name', 'unique_id', 'user_type', 'subject', 'status', 'time_in', 'time_out' ]
 
-    list_display = ( 'name', 'unique_id', 'user_type', 'status', 'time_in', 'time_out', 'created_at', 'updated_at' )
+    list_display = (
+        'name', 'unique_id', 'user_type', 'subject', 'status', 'time_in', 'time_out',
+        'created_at', 'updated_at'
+    )
 
 admin.site.register(Attendance, Attendance_Admin)
 

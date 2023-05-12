@@ -62,7 +62,7 @@ class Teacher_Form(forms.ModelForm):
                 'class': 'form-control form-control-lg',
                 'aria-label': 'Female'
             }),
-            'subject': forms.TextInput(attrs={
+            'subject': forms.SelectMultiple(attrs={
                 'placeholder': 'English',
                 'class': 'form-control form-control-lg',
                 'aria-label': 'English'
@@ -78,6 +78,11 @@ class Teacher_Form(forms.ModelForm):
                 'class': 'form-control form-control-lg',
                 'aria-label': 'e.g. 0772814507'
             }),
+            'school': forms.TextInput(attrs={
+                'placeholder': 'Your School',
+                'class': 'form-control form-control-lg',
+                'aria-label': 'Your School'
+            }),
             'avatar': forms.FileInput(attrs={
                 'class': 'js-file-attach form-attachment-btn-label',
                 "data-hs-file-attach-options": {
@@ -88,6 +93,11 @@ class Teacher_Form(forms.ModelForm):
                     "resetImg": "{% static 'core/assets/img/160x160/img1.jpg' %}",
                     "allowedTypes": [".png", ".jpeg", ".jpg"]
                 }
+            }),
+            'unique_id': forms.TextInput(attrs={
+                'placeholder': "Registration Number",
+                'class': 'form-control form-control-lg',
+                'aria-label': "Registration Number"
             }),
         }
 
@@ -123,6 +133,11 @@ class Student_Form(forms.ModelForm):
                 'class': 'form-control form-control-lg',
                 'aria-label': 'S.6 or P.1'
             }),
+            'school': forms.TextInput(attrs={
+                'placeholder': 'Your School',
+                'class': 'form-control form-control-lg',
+                'aria-label': 'Your School'
+            }),
             'level': forms.TextInput(attrs={
                 'placeholder': "Primary or O'Level",
                 'class': 'form-control form-control-lg',
@@ -142,6 +157,11 @@ class Student_Form(forms.ModelForm):
             'birthday': forms.DateInput(attrs={
                 'class': 'form-control form-control-lg',
                 'type': 'date'
-            })
+            }),
+            'unique_id': forms.TextInput(attrs={
+                'placeholder': "Registration Number",
+                'class': 'form-control form-control-lg',
+                'aria-label': "Registration Number"
+            }),
         }
 

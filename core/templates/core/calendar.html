@@ -490,661 +490,949 @@
     <!-- JS Plugins Init. -->
     <script>
         (function() {
-        window.onload = function () {
-        
-
-        // INITIALIZATION OF FORM SEARCH
-        // =======================================================
-        new HSFormSearch('.js-form-search')
-
-
-        // INITIALIZATION OF BOOTSTRAP DROPDOWN
-        // =======================================================
-        HSBsDropdown.init()
+            window.onload = function () {
+            
+            // INITIALIZATION OF FORM SEARCH
+            // =======================================================
+            new HSFormSearch('.js-form-search')
 
 
-        // INITIALIZATION OF SELECT
-        // =======================================================
-        HSCore.components.HSTomSelect.init('.js-select', {
-            hideSearch: true
-        })
+            // INITIALIZATION OF BOOTSTRAP DROPDOWN
+            // =======================================================
+            HSBsDropdown.init()
 
 
-        // INITIALIZATION OF FULLCALENDAR
-        // =======================================================
-        let $popover,
-            filterSearchExample,
-            editableEvent = {}
+            // INITIALIZATION OF SELECT
+            // =======================================================
+            HSCore.components.HSTomSelect.init('.js-select', {
+                hideSearch: true
+            })
 
-        const popoverContent = function (data) {
-            return `
-                <h3 class="mb-4">${data.event.title}</h3>
 
-                <div class="d-flex mb-4">
-                    <i class="bi bi-clock nav-icon"></i>
-                    <div class="flex-grow-1">
-                        <span class="d-block text-dark mb-2">${moment(data.event.start).format('LLLL')} - ${moment(data.event.end).format('LLLL')}</span>
-                        <span class="d-block">Repeat: <span class="text-dark text-capitalize">${data.event.extendedProps.repeatField}</span></span>
-                    </div>
-                </div>
+            // INITIALIZATION OF FULLCALENDAR
+            // =======================================================
+            let $popover,
+                filterSearchExample,
+                editableEvent = {}
 
-                <div class="d-flex mb-4">
-                    <i class="bi bi-people nav-icon"></i>
-                    <div class="flex-grow-1">
-                        <span class="d-block text-dark">${getAvatars(data.event.extendedProps.guestsField) || 'Empty'}</span>
-                    </div>
-                </div>
-
-                <div class="d-flex mb-4">
-                    <i class="bi bi-pin-map nav-icon"></i>
-                    <div class="flex-grow-1">
-                        <span class="d-block text-dark">${data.event.extendedProps.eventLocationLabel || 'Empty'}</span>
-                    </div>
-                </div>
-
-                <div class="d-flex mb-4">
-                    <i class="bi bi-text-left nav-icon"></i>
-                    <div class="flex-grow-1">
-                        <span class="d-block text-dark">${data.event.extendedProps.eventDescriptionLabel || 'Empty'}</span>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-center mb-4">
-                    <div class="avatar avatar-xs avatar-circle me-2">
-                        <img class="avatar-img" src="{% static 'core/assets/img/160x160/img6.jpg' %}" alt="Image Description">
-                    </div>
-                    <div class="flex-grow-1">
-                        <span class="d-block text-dark">Ongom Daniel</span>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-end">
-                    <a id="closePopover" href="javascript:;" class="btn btn-sm btn-white me-2">Close</a>
-                    <a id="modal-invoker-${data.event.id}" href="javascript:;" class="btn btn-sm btn-primary">
-                        <i class="bi bi-pencil"></i>
-                        Edit
-                    </a>
-                </div>
-            `;},
-            eventContent = function (data) {
+            const popoverContent = function (data) {
                 return `
-                    <div>
-                        <div class="fc-event-time">${$gridViewSelect.value === 'timeGridWeek' && !data.allDay ? moment(data.start).format('LT') + '-' + moment(data.end).format('LT') : ''}</div>
-                        <div class="d-flex">
-                            ${data.extendedProps.image
-                                ? `<img class="avatar avatar-xs me-2" src="${data.extendedProps.image}" alt="Image Description">`
-                                : ''
-                            }
-                            <span class="fc-event-title fc-sticky">${data.title}</span>
+                    <h3 class="mb-4">${data.event.title}</h3>
+
+                    <div class="d-flex mb-4">
+                        <i class="bi bi-clock nav-icon"></i>
+                        <div class="flex-grow-1">
+                            <span class="d-block text-dark mb-2">${moment(data.event.start).format('LLLL')} - ${moment(data.event.end).format('LLLL')}</span>
+                            <span class="d-block">Repeat: <span class="text-dark text-capitalize">${data.event.extendedProps.repeatField}</span></span>
                         </div>
                     </div>
-                `;
-            }
 
-        // Fullcalendar controls
-        const $prevMonthBtn = document.querySelector('[data-fc-prev-month]'),
-            $nextMonthBtn = document.querySelector('[data-fc-next-month]'),
-            $todayBtn = document.querySelector('[data-fc-today]'),
-            $dateTitle = document.querySelector('[data-fc-title]'),
-            $gridViewSelect = document.querySelector('[data-fc-grid-view]')
+                    <div class="d-flex mb-4">
+                        <i class="bi bi-people nav-icon"></i>
+                        <div class="flex-grow-1">
+                            <span class="d-block text-dark">${getAvatars(data.event.extendedProps.guestsField) || 'Empty'}</span>
+                        </div>
+                    </div>
 
-        // Filter controls
-        const $filterByTitle = document.querySelector('#filter-by-title'),
-            $filters = document.querySelectorAll('[data-filter]')
+                    <div class="d-flex mb-4">
+                        <i class="bi bi-pin-map nav-icon"></i>
+                        <div class="flex-grow-1">
+                            <span class="d-block text-dark">${data.event.extendedProps.eventLocationLabel || 'Empty'}</span>
+                        </div>
+                    </div>
 
-        // Edit popup fields
-        const $addEventToCalendarModal = document.querySelector("#addEventToCalendarModal"),
-            $titleField = document.querySelector('#eventTitleLabel'),
-            $repeatLabel = document.querySelector('#eventRepeatLabel'),
-            $eventDescriptionLabel = document.querySelector('#eventDescriptionLabel'),
-            $eventLocationLabel = document.querySelector('#eventLocationLabel'),
-            $eventColorLabel = document.querySelector('#eventColorLabel'),
-            $eventGuestsLabel = document.querySelector('#eventGuestsLabel'),
-            $processEvent = document.querySelector('#processEvent'),
-            allMembers = [
-            {
-                "value": "Amanda Harvey",
-                "src": null
-            }, {
-                "value": "Clarice Boone",
-                "src": null
-            }, {
-                "value": "Sam Kart",
-                "src": null
-            }, {
-                "value": "Mark Williams",
-                "src": null
-            }, {
-                "value": "Linda Bates",
-                "src": null
-            }, {
-                "value": "Rachel Doe",
-                "src": null
-            }, {
-                "value": "David Harrison",
-                "src": "{% static 'core/assets/img/160x160/img.jpg' %}"
-            }, {
-                "value": "Finch Hoot",
-                "src": "{% static 'core/assets/img/160x160/img5.jpg' %}"
-            }, {
-                "value": "Ella Lauda",
-                "src": "{% static 'core/assets/img/160x160/img9.jpg' %}"
-            }
-            ]
+                    <div class="d-flex mb-4">
+                        <i class="bi bi-text-left nav-icon"></i>
+                        <div class="flex-grow-1">
+                            <span class="d-block text-dark">${data.event.extendedProps.eventDescriptionLabel || 'Empty'}</span>
+                        </div>
+                    </div>
 
-        let guestsField,
-            repeatField,
-            eventColorField,
-            fullcalendarEditable
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="avatar avatar-xs avatar-circle me-2">
+                            <img class="avatar-img" src="{% static 'core/assets/img/160x160/img6.jpg' %}" alt="Image Description">
+                        </div>
+                        <div class="flex-grow-1">
+                            <span class="d-block text-dark">Ongom Daniel</span>
+                        </div>
+                    </div>
 
-        // Init popup
-        const addEventToCalendarModal = new bootstrap.Modal($addEventToCalendarModal);
+                    <div class="d-flex justify-content-end">
+                        <a id="closePopover" href="javascript:;" class="btn btn-sm btn-white me-2">Close</a>
+                        <a id="modal-invoker-${data.event.id}" href="javascript:;" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil"></i>
+                            Edit
+                        </a>
+                    </div>
+                `;},
+                eventContent = function (data) {
+                    return `
+                        <div>
+                            <div class="fc-event-time">${$gridViewSelect.value === 'timeGridWeek' && !data.allDay ? moment(data.start).format('LT') + '-' + moment(data.end).format('LT') : ''}</div>
+                            <div class="d-flex">
+                                ${data.extendedProps.image
+                                    ? `<img class="avatar avatar-xs me-2" src="${data.extendedProps.image}" alt="Image Description">`
+                                    : ''
+                                }
+                                <span class="fc-event-title fc-sticky">${data.title}</span>
+                            </div>
+                        </div>
+                    `;
+                }
 
-        HSCore.components.HSFlatpickr.init('#eventDateRangeLabel');
-        const eventDateRange = HSCore.components.HSFlatpickr.getItem('eventDateRangeLabel');
+            // Fullcalendar controls
+            const $prevMonthBtn = document.querySelector('[data-fc-prev-month]'),
+                $nextMonthBtn = document.querySelector('[data-fc-next-month]'),
+                $todayBtn = document.querySelector('[data-fc-today]'),
+                $dateTitle = document.querySelector('[data-fc-title]'),
+                $gridViewSelect = document.querySelector('[data-fc-grid-view]')
 
-        HSCore.components.HSTomSelect.init($eventGuestsLabel, {
-            options: allMembers,
-            render: {
-            option: function (data, escape) {
-                return data.src ? `<div><img class="avatar avatar-xs avatar-circle me-2" src="${data.src}">${data.value}</div>` : `
+            // Filter controls
+            const $filterByTitle = document.querySelector('#filter-by-title'),
+                $filters = document.querySelectorAll('[data-filter]')
+
+            // Edit popup fields
+            const $addEventToCalendarModal = document.querySelector("#addEventToCalendarModal"),
+                $titleField = document.querySelector('#eventTitleLabel'),
+                $repeatLabel = document.querySelector('#eventRepeatLabel'),
+                $eventDescriptionLabel = document.querySelector('#eventDescriptionLabel'),
+                $eventLocationLabel = document.querySelector('#eventLocationLabel'),
+                $eventColorLabel = document.querySelector('#eventColorLabel'),
+                $eventGuestsLabel = document.querySelector('#eventGuestsLabel'),
+                $processEvent = document.querySelector('#processEvent'),
+                allMembers = [
+                {
+                    "value": "Amanda Harvey",
+                    "src": null
+                }, {
+                    "value": "Clarice Boone",
+                    "src": null
+                }, {
+                    "value": "Sam Kart",
+                    "src": null
+                }, {
+                    "value": "Mark Williams",
+                    "src": null
+                }, {
+                    "value": "Linda Bates",
+                    "src": null
+                }, {
+                    "value": "Rachel Doe",
+                    "src": null
+                }, {
+                    "value": "David Harrison",
+                    "src": "{% static 'core/assets/img/160x160/img.jpg' %}"
+                }, {
+                    "value": "Finch Hoot",
+                    "src": "{% static 'core/assets/img/160x160/img5.jpg' %}"
+                }, {
+                    "value": "Ella Lauda",
+                    "src": "{% static 'core/assets/img/160x160/img9.jpg' %}"
+                }
+                ]
+
+            let guestsField,
+                repeatField,
+                eventColorField,
+                fullcalendarEditable
+
+            // Init popup
+            const addEventToCalendarModal = new bootstrap.Modal($addEventToCalendarModal);
+
+            HSCore.components.HSFlatpickr.init('#eventDateRangeLabel');
+            const eventDateRange = HSCore.components.HSFlatpickr.getItem('eventDateRangeLabel');
+
+            HSCore.components.HSTomSelect.init($eventGuestsLabel, {
+                options: allMembers,
+                render: {
+                option: function (data, escape) {
+                    return data.src ? `<div><img class="avatar avatar-xs avatar-circle me-2" src="${data.src}">${data.value}</div>` : `
+                        <div>
+                            <div class="avatar avatar-xs avatar-soft-primary avatar-circle me-2">
+                                <span class="avatar-initials">${data.value.charAt(0)}</span>
+                            </div>
+                            ${data.value}
+                        </div>
+                    `
+                },
+                item: function (item, escape) {
+                    return item.src ? `<div><img class="avatar avatar-xs avatar-circle me-2" src="${item.src}">${item.value}</div>` : `
                     <div>
                         <div class="avatar avatar-xs avatar-soft-primary avatar-circle me-2">
-                            <span class="avatar-initials">${data.value.charAt(0)}</span>
+                            <span class="avatar-initials">${item.value.charAt(0)}</span>
                         </div>
-                        ${data.value}
+                        ${item.value}
                     </div>
-                `
-            },
-            item: function (item, escape) {
-                return item.src ? `<div><img class="avatar avatar-xs avatar-circle me-2" src="${item.src}">${item.value}</div>` : `
-                <div>
-                    <div class="avatar avatar-xs avatar-soft-primary avatar-circle me-2">
-                        <span class="avatar-initials">${item.value.charAt(0)}</span>
-                    </div>
-                    ${item.value}
-                </div>
-            `}
-            }
-        })
-
-        guestsField = HSCore.components.HSTomSelect.getItem("eventGuestsLabel")
-        repeatField = HSCore.components.HSTomSelect.getItem("eventRepeatLabel")
-        eventColorField = HSCore.components.HSTomSelect.getItem("eventColorLabel")
-
-        const startDate = new Date();
-
-        HSCore.components.HSFullCalendar.init('#js-fullcalendar', {
-            events: [
-            {
-                id: 1,
-                title: "English Lesson",
-                start: "2023-02-07 14:00",
-                end: "2023-02-07 16:00",
-                className: "fullcalendar-custom-event-hs-team",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "",
-                repeatField: "weekdays",
-                allDay: false,
-                guestsField: ["Engineer Daniel"],
-                image: "{% static 'core/assets/svg/brands/mastercard.svg' %}"
-            },
-            {
-                id: 2,
-                title: "Mathematics Lesson",
-                start: "2023-02-03 11:00",
-                end: "2023-02-03 13:00",
-                className: "fullcalendar-custom-event-tasks",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "",
-                repeatField: "never",
-                allDay: false,
-                guestsField: ["Anne Richard", "Finch Hoot"],
-                image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
-            },
-            {
-                id: 3,
-                title: "Social Studies Lession",
-                start: "2023-02-20 16:00",
-                end: "2023-02-20 17:00",
-                className: "fullcalendar-custom-event-hs-team",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "Online",
-                repeatField: "everyday",
-                guestsField: [],
-                image: "{% static 'core/assets/svg/brands/jira-icon.svg' %}"
-            },
-            {
-                id: 4,
-                title: "Religious Education and/or Islam Lession",
-                start: "2023-02-16 02:00",
-                end: "2023-02-16 15:00",
-                className: "fullcalendar-custom-event-hs-team",
-                eventDescriptionLabel: "Learn Figma like a Professional! Start from the basics and go all the way to creating your own design!",
-                eventLocationLabel: "Online",
-                repeatField: "never",
-                guestsField: ["Bob Dean", "Ella Lauda", "Lori Hunter", "Costa Quinn"],
-                image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
-            },
-            {
-                id: 5,
-                title: "Basic Science Lession",
-                start: "2023-02-22T10:32:09.094Z",
-                end: "2023-02-22T11:32:09.094Z",
-                className: "fullcalendar-custom-event-holidays",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "",
-                repeatField: "never",
-                guestsField: [],
-                image: "{% static 'core/assets/svg/brands/pdf-icon.svg' %}"
-            },
-            {
-                id: 6,
-                title: "Religious Education and/or Islam Lession",
-                start: "2023-02-09 08:00",
-                end: "2023-02-09 10:00",
-                className: "fullcalendar-custom-event-hs-team",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "",
-                repeatField: "never",
-                guestsField: [],
-                image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
-            },
-            {
-                id: 7,
-                title: "English Lession",
-                start: "2023-02-01 14:00",
-                end: "2023-02-01 16:00",
-                className: "fullcalendar-custom-event-hs-team",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "",
-                repeatField: "everyday",
-                allDay: false,
-                guestsField: ["Linda Bates", "Rachel Doe"],
-                image: "{% static 'core/assets/svg/brands/excel-icon.svg' %}"
-            },
-            {
-                id: 8,
-                title: "Mathematics Lession",
-                start: "2023-02-27 10:00",
-                end: "2023-02-27 12:00",
-                className: "fullcalendar-custom-event-tasks",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "",
-                repeatField: "everyday",
-                guestsField: ["Brian Halligan"],
-                image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
-            },
-            {
-                id: 9,
-                title: "Social Studies Lession",
-                start: "2023-02-28 08:00",
-                end: "2023-02-28 10:00",
-                className: "fullcalendar-custom-event-hs-team",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "",
-                repeatField: "never",
-                guestsField: ["Clarice Boone", "Sam Kart", "Mark Williams"],
-                image: "{% static 'core/assets/svg/brands/jira-icon.svg' %}"
-            },
-            {
-                id: 10,
-                title: "Basic Science Lession",
-                start: "2023-02-14 14:00",
-                end: "2023-02-14 16:00",
-                className: "fullcalendar-custom-event-holidays",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "Online",
-                repeatField: "everyday",
-                guestsField: [],
-                image: "{% static 'core/assets/svg/brands/pdf-icon.svg' %}"
-            },
-            {
-                id: 11,
-                title: "Religious Education and/or Islam Lession",
-                start: "2023-02-24 09:00",
-                end: "2023-02-24 11:00",
-                className: "fullcalendar-custom-event-hs-team",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "",
-                repeatField: "everyday",
-                guestsField: [],
-                image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
-            },
-            {
-                id: 12,
-                title: "Mathematics Lession",
-                start: "2023-02-17 13:00",
-                end: "2023-02-17 15:00",
-                className: "fullcalendar-custom-event-tasks",
-                eventDescriptionLabel: "",
-                eventLocationLabel: "Online",
-                repeatField: "everyday",
-                guestsField: [],
-                image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
-            }
-            ],
-            initialDate: startDate.toJSON(),
-            headerToolbar: false,
-            editable: true,
-            defaultAllDay: false,
-            datesSet(dateSet) {
-                $dateTitle.textContent = dateSet.view.title
-            },
-            eventClick: function (event) {
-                // Popover Content
-                const _popoverContent = popoverContent(event);
-
-                if ($popover && $popover._element) {
-                    $popover.dispose();
+                `}
                 }
+            })
 
-                // Open Popover
-                $popover = new bootstrap.Popover(event.el, {
-                    html: true,
-                    content: _popoverContent,
-                    template: `
-                        <div class="popover fullcalendar-event-popover" role="tooltip">
-                            <div class="arrow"></div>
-                            <h3 class="popover-header"></h3>
-                            <div class="popover-body"></div>
-                        </div>
-                    `,
-                });
-                $popover.show();
+            guestsField = HSCore.components.HSTomSelect.getItem("eventGuestsLabel")
+            repeatField = HSCore.components.HSTomSelect.getItem("eventRepeatLabel")
+            eventColorField = HSCore.components.HSTomSelect.getItem("eventColorLabel")
 
-                // Open Popover For Editing
-                event.el.addEventListener('shown.bs.popover', function () {
-                const $invoker = document.querySelector(`#modal-invoker-${event.event.id}`);
+            const startDate = new Date();
+            
+            function getEvents() {
+                const endpoint = "timetable";
+                let newData;
+                
+                return fetch(endpoint)
+                .then((response) =>  response.json())
+                .then((data) => {
+                    const jsonData = JSON.parse(data);
+                    newData = Object.entries(jsonData).map((d, i) => {
+                        let fields = d[1].fields;
+                        const start = fields.start;
+                        const end = fields.end;
+                        fields.start = convertDateTime(start);
+                        fields.end = convertDateTime(end);
+                        return fields;
+                    });
+                    newData;
 
-                $invoker.addEventListener('click', function () {
-                if ($popover && $popover._element) {
-                    $popover.dispose();
+                    console.log('====================================');
+                    console.log("New Data:", newData);
+                    console.log('====================================');
+                        
+                    HSCore.components.HSFullCalendar.init('#js-fullcalendar', {
+                        
+                        // events: [
+                        //     {
+                        //         id: 1,
+                        //         title: "English Lesson",
+                        //         start: "2023-05-07 14:00",
+                        //         end: "2023-05-07 16:00",
+                        //         className: "fullcalendar-custom-event-hs-team",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "",
+                        //         repeatField: "weekdays",
+                        //         allDay: false,
+                        //         guestsField: ["Engineer Daniel"],
+                        //         image: "{% static 'core/assets/svg/brands/mastercard.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 2,
+                        //         title: "Mathematics Lesson",
+                        //         start: "2023-05-03 11:00",
+                        //         end: "2023-05-03 13:00",
+                        //         className: "fullcalendar-custom-event-tasks",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "",
+                        //         repeatField: "never",
+                        //         allDay: false,
+                        //         guestsField: ["Anne Richard", "Finch Hoot"],
+                        //         image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 3,
+                        //         title: "Social Studies Lession",
+                        //         start: "2023-05-20 16:00",
+                        //         end: "2023-05-20 17:00",
+                        //         className: "fullcalendar-custom-event-hs-team",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "Online",
+                        //         repeatField: "everyday",
+                        //         guestsField: [],
+                        //         image: "{% static 'core/assets/svg/brands/jira-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 4,
+                        //         title: "Religious Education and/or Islam Lession",
+                        //         start: "2023-05-16 02:00",
+                        //         end: "2023-05-16 15:00",
+                        //         className: "fullcalendar-custom-event-hs-team",
+                        //         eventDescriptionLabel: "Learn Figma like a Professional! Start from the basics and go all the way to creating your own design!",
+                        //         eventLocationLabel: "Online",
+                        //         repeatField: "never",
+                        //         guestsField: ["Bob Dean", "Ella Lauda", "Lori Hunter", "Costa Quinn"],
+                        //         image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 5,
+                        //         title: "Basic Science Lession",
+                        //         start: "2023-05-22T10:32:09.094Z",
+                        //         end: "2023-05-22T11:32:09.094Z",
+                        //         className: "fullcalendar-custom-event-holidays",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "",
+                        //         repeatField: "never",
+                        //         guestsField: [],
+                        //         image: "{% static 'core/assets/svg/brands/pdf-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 6,
+                        //         title: "Religious Education and/or Islam Lession",
+                        //         start: "2023-05-09 08:00",
+                        //         end: "2023-05-09 10:00",
+                        //         className: "fullcalendar-custom-event-hs-team",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "",
+                        //         repeatField: "never",
+                        //         guestsField: [],
+                        //         image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 7,
+                        //         title: "English Lession",
+                        //         start: "2023-05-01 14:00",
+                        //         end: "2023-05-01 16:00",
+                        //         className: "fullcalendar-custom-event-hs-team",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "",
+                        //         repeatField: "everyday",
+                        //         allDay: false,
+                        //         guestsField: ["Linda Bates", "Rachel Doe"],
+                        //         image: "{% static 'core/assets/svg/brands/excel-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 8,
+                        //         title: "Mathematics Lession",
+                        //         start: "2023-05-27 10:00",
+                        //         end: "2023-05-27 12:00",
+                        //         className: "fullcalendar-custom-event-tasks",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "",
+                        //         repeatField: "everyday",
+                        //         guestsField: ["Brian Halligan"],
+                        //         image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 9,
+                        //         title: "Social Studies Lession",
+                        //         start: "2023-05-28 08:00",
+                        //         end: "2023-05-28 10:00",
+                        //         className: "fullcalendar-custom-event-hs-team",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "",
+                        //         repeatField: "never",
+                        //         guestsField: ["Clarice Boone", "Sam Kart", "Mark Williams"],
+                        //         image: "{% static 'core/assets/svg/brands/jira-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 10,
+                        //         title: "Basic Science Lession",
+                        //         start: "2023-05-14 14:00",
+                        //         end: "2023-05-14 16:00",
+                        //         className: "fullcalendar-custom-event-holidays",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "Online",
+                        //         repeatField: "everyday",
+                        //         guestsField: [],
+                        //         image: "{% static 'core/assets/svg/brands/pdf-icon.svg' %}"
+                        //     },
+                        //     {
+                        //         id: 11,
+                        //         title: "Religious Education and/or Islam Lession",
+                        //         start: "2023-05-24 09:00",
+                        //         end: "2023-05-24 11:00",
+                        //         className: "fullcalendar-custom-event-hs-team",
+                        //         eventDescriptionLabel: "",
+                        //         eventLocationLabel: "",
+                        //         repeatField: "everyday",
+                        //         guestsField: [],
+                        //         image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
+                        //     },
+                        //     {
+                        //     id: 12,
+                        //     title: "Mathematics Lession",
+                        //     start: "2023-05-17 13:00",
+                        //     end: "2023-05-17 15:00",
+                        //     className: "fullcalendar-custom-event-tasks",
+                        //     eventDescriptionLabel: "",
+                        //     eventLocationLabel: "Online",
+                        //     repeatField: "everyday",
+                        //     guestsField: [],
+                        //     image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
+                        // }
+                        // ],
+                        
+                        events: newData,
+                        initialDate: startDate.toJSON(),
+                        headerToolbar: false,
+                        editable: true,
+                        defaultAllDay: false,
+                        datesSet(dateSet) {
+                            $dateTitle.textContent = dateSet.view.title
+                        },
+                        eventClick: function (event) {
+                            // Popover Content
+                            const _popoverContent = popoverContent(event);
+
+                            if ($popover && $popover._element) {
+                                $popover.dispose();
+                            }
+
+                            // Open Popover
+                            $popover = new bootstrap.Popover(event.el, {
+                                html: true,
+                                content: _popoverContent,
+                                template: `
+                                    <div class="popover fullcalendar-event-popover" role="tooltip">
+                                        <div class="arrow"></div>
+                                        <h3 class="popover-header"></h3>
+                                        <div class="popover-body"></div>
+                                    </div>
+                                `,
+                            });
+                            $popover.show();
+
+                            // Open Popover For Editing
+                            event.el.addEventListener('shown.bs.popover', function () {
+                            const $invoker = document.querySelector(`#modal-invoker-${event.event.id}`);
+
+                            $invoker.addEventListener('click', function () {
+                            if ($popover && $popover._element) {
+                                $popover.dispose();
+                            }
+
+                            prepareData(
+                                event.event.title,
+                                event.event.start,
+                                event.event.end,
+                                event.event
+                            );
+                            });
+                        });
+                        },
+                        eventContent({event}) {
+                        return {
+                            html: eventContent(event),
+                        };
+                        },
+                        drop({draggedEl}) {
+                            draggedEl.remove();
+                        },
+                    });
+
+                    fullcalendarEditable = HSCore.components.HSFullCalendar.getItem('js-fullcalendar');
+
+                    // return newData;
+                })
+                .catch((error) => console.log("Error:", error));
+            }
+
+            // HSCore.components.HSFullCalendar.init('#js-fullcalendar', {
+                
+            //     events: [
+            //         {
+            //             id: 1,
+            //             title: "English Lesson",
+            //             start: "2023-05-07 14:00",
+            //             end: "2023-05-07 16:00",
+            //             className: "fullcalendar-custom-event-hs-team",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "",
+            //             repeatField: "weekdays",
+            //             allDay: false,
+            //             guestsField: ["Engineer Daniel"],
+            //             image: "{% static 'core/assets/svg/brands/mastercard.svg' %}"
+            //         },
+            //         {
+            //             id: 2,
+            //             title: "Mathematics Lesson",
+            //             start: "2023-05-03 11:00",
+            //             end: "2023-05-03 13:00",
+            //             className: "fullcalendar-custom-event-tasks",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "",
+            //             repeatField: "never",
+            //             allDay: false,
+            //             guestsField: ["Anne Richard", "Finch Hoot"],
+            //             image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 3,
+            //             title: "Social Studies Lession",
+            //             start: "2023-05-20 16:00",
+            //             end: "2023-05-20 17:00",
+            //             className: "fullcalendar-custom-event-hs-team",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "Online",
+            //             repeatField: "everyday",
+            //             guestsField: [],
+            //             image: "{% static 'core/assets/svg/brands/jira-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 4,
+            //             title: "Religious Education and/or Islam Lession",
+            //             start: "2023-05-16 02:00",
+            //             end: "2023-05-16 15:00",
+            //             className: "fullcalendar-custom-event-hs-team",
+            //             eventDescriptionLabel: "Learn Figma like a Professional! Start from the basics and go all the way to creating your own design!",
+            //             eventLocationLabel: "Online",
+            //             repeatField: "never",
+            //             guestsField: ["Bob Dean", "Ella Lauda", "Lori Hunter", "Costa Quinn"],
+            //             image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 5,
+            //             title: "Basic Science Lession",
+            //             start: "2023-05-22T10:32:09.094Z",
+            //             end: "2023-05-22T11:32:09.094Z",
+            //             className: "fullcalendar-custom-event-holidays",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "",
+            //             repeatField: "never",
+            //             guestsField: [],
+            //             image: "{% static 'core/assets/svg/brands/pdf-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 6,
+            //             title: "Religious Education and/or Islam Lession",
+            //             start: "2023-05-09 08:00",
+            //             end: "2023-05-09 10:00",
+            //             className: "fullcalendar-custom-event-hs-team",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "",
+            //             repeatField: "never",
+            //             guestsField: [],
+            //             image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 7,
+            //             title: "English Lession",
+            //             start: "2023-05-01 14:00",
+            //             end: "2023-05-01 16:00",
+            //             className: "fullcalendar-custom-event-hs-team",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "",
+            //             repeatField: "everyday",
+            //             allDay: false,
+            //             guestsField: ["Linda Bates", "Rachel Doe"],
+            //             image: "{% static 'core/assets/svg/brands/excel-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 8,
+            //             title: "Mathematics Lession",
+            //             start: "2023-05-27 10:00",
+            //             end: "2023-05-27 12:00",
+            //             className: "fullcalendar-custom-event-tasks",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "",
+            //             repeatField: "everyday",
+            //             guestsField: ["Brian Halligan"],
+            //             image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 9,
+            //             title: "Social Studies Lession",
+            //             start: "2023-05-28 08:00",
+            //             end: "2023-05-28 10:00",
+            //             className: "fullcalendar-custom-event-hs-team",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "",
+            //             repeatField: "never",
+            //             guestsField: ["Clarice Boone", "Sam Kart", "Mark Williams"],
+            //             image: "{% static 'core/assets/svg/brands/jira-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 10,
+            //             title: "Basic Science Lession",
+            //             start: "2023-05-14 14:00",
+            //             end: "2023-05-14 16:00",
+            //             className: "fullcalendar-custom-event-holidays",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "Online",
+            //             repeatField: "everyday",
+            //             guestsField: [],
+            //             image: "{% static 'core/assets/svg/brands/pdf-icon.svg' %}"
+            //         },
+            //         {
+            //             id: 11,
+            //             title: "Religious Education and/or Islam Lession",
+            //             start: "2023-05-24 09:00",
+            //             end: "2023-05-24 11:00",
+            //             className: "fullcalendar-custom-event-hs-team",
+            //             eventDescriptionLabel: "",
+            //             eventLocationLabel: "",
+            //             repeatField: "everyday",
+            //             guestsField: [],
+            //             image: "{% static 'core/assets/svg/brands/figma-icon.svg' %}"
+            //         },
+            //         {
+            //         id: 12,
+            //         title: "Mathematics Lession",
+            //         start: "2023-05-17 13:00",
+            //         end: "2023-05-17 15:00",
+            //         className: "fullcalendar-custom-event-tasks",
+            //         eventDescriptionLabel: "",
+            //         eventLocationLabel: "Online",
+            //         repeatField: "everyday",
+            //         guestsField: [],
+            //         image: "{% static 'core/assets/svg/brands/slack-icon.svg' %}"
+            //     }
+            //     ],
+                
+            //     // events: getEvents(),
+            //     // evt: getEvents(),
+            //     initialDate: startDate.toJSON(),
+            //     headerToolbar: false,
+            //     editable: true,
+            //     defaultAllDay: false,
+            //     datesSet(dateSet) {
+            //         $dateTitle.textContent = dateSet.view.title
+            //     },
+            //     eventClick: function (event) {
+            //         // Popover Content
+            //         const _popoverContent = popoverContent(event);
+
+            //         if ($popover && $popover._element) {
+            //             $popover.dispose();
+            //         }
+
+            //         // Open Popover
+            //         $popover = new bootstrap.Popover(event.el, {
+            //             html: true,
+            //             content: _popoverContent,
+            //             template: `
+            //                 <div class="popover fullcalendar-event-popover" role="tooltip">
+            //                     <div class="arrow"></div>
+            //                     <h3 class="popover-header"></h3>
+            //                     <div class="popover-body"></div>
+            //                 </div>
+            //             `,
+            //         });
+            //         $popover.show();
+
+            //         // Open Popover For Editing
+            //         event.el.addEventListener('shown.bs.popover', function () {
+            //         const $invoker = document.querySelector(`#modal-invoker-${event.event.id}`);
+
+            //         $invoker.addEventListener('click', function () {
+            //         if ($popover && $popover._element) {
+            //             $popover.dispose();
+            //         }
+
+            //         prepareData(
+            //             event.event.title,
+            //             event.event.start,
+            //             event.event.end,
+            //             event.event
+            //         );
+            //         });
+            //     });
+            //     },
+            //     eventContent({event}) {
+            //     return {
+            //         html: eventContent(event),
+            //     };
+            //     },
+            //     drop({draggedEl}) {
+            //         draggedEl.remove();
+            //     },
+            // });
+
+            getEvents();
+
+            // fullcalendarEditable = HSCore.components.HSFullCalendar.getItem('js-fullcalendar');
+            
+
+            // Events
+            document.addEventListener('click', function (e) {
+                if (
+                (e.target && e.target.id === 'closePopover' && $popover && $popover._element)
+                || (e.target && !e.target.closest('.fc-event') && !e.target.closest('.popover') && $popover && $popover._element)
+                ) {
+                $popover.dispose();
                 }
-
-                prepareData(
-                    event.event.title,
-                    event.event.start,
-                    event.event.end,
-                    event.event
-                );
-                });
             });
-            },
-            eventContent({event}) {
-            return {
-                html: eventContent(event),
-            };
-            },
-            drop({draggedEl}) {
-                draggedEl.remove();
-            },
-        });
 
-        fullcalendarEditable = HSCore.components.HSFullCalendar.getItem('js-fullcalendar');
+            document.addEventListener('scroll', function () {
+                if ($popover && $popover._element) {
+                $popover.dispose();
+                }
+            });
 
-        // Events
-        document.addEventListener('click', function (e) {
-            if (
-            (e.target && e.target.id === 'closePopover' && $popover && $popover._element)
-            || (e.target && !e.target.closest('.fc-event') && !e.target.closest('.popover') && $popover && $popover._element)
-            ) {
-            $popover.dispose();
-            }
-        });
+            $prevMonthBtn.addEventListener('click', function () {
+                fullcalendarEditable.prev();
 
-        document.addEventListener('scroll', function () {
-            if ($popover && $popover._element) {
-            $popover.dispose();
-            }
-        });
+                HSCore.hideTooltips();
+            });
 
-        $prevMonthBtn.addEventListener('click', function () {
-            fullcalendarEditable.prev();
+            $nextMonthBtn.addEventListener('click', function () {
+                fullcalendarEditable.next();
 
-            HSCore.hideTooltips();
-        });
+                HSCore.hideTooltips();
+            });
 
-        $nextMonthBtn.addEventListener('click', function () {
-            fullcalendarEditable.next();
+            $gridViewSelect.addEventListener('change', function (event) {
+                fullcalendarEditable.changeView(event.target.value);
+            });
 
-            HSCore.hideTooltips();
-        });
+            $todayBtn.addEventListener('click', function () {
+                fullcalendarEditable.today();
+            });
 
-        $gridViewSelect.addEventListener('change', function (event) {
-            fullcalendarEditable.changeView(event.target.value);
-        });
+            $todayBtn.title = new Date().toDateString();
 
-        $todayBtn.addEventListener('click', function () {
-            fullcalendarEditable.today();
-        });
+            $addEventToCalendarModal.addEventListener('hide.bs.modal', function () {
+                $titleField.style.height = 'auto';
+            });
 
-        $todayBtn.title = new Date().toDateString();
+            $addEventToCalendarModal.addEventListener('show.bs.modal', function () {
+                clearForm();
+            });
 
-        $addEventToCalendarModal.addEventListener('hide.bs.modal', function () {
-            $titleField.style.height = 'auto';
-        });
+            $addEventToCalendarModal.addEventListener('shown.bs.modal', function () {
+                $titleField.style.height = `${$titleField.scrollHeight}px`;
 
-        $addEventToCalendarModal.addEventListener('show.bs.modal', function () {
-            clearForm();
-        });
+                $titleField.focus();
+            });
 
-        $addEventToCalendarModal.addEventListener('shown.bs.modal', function () {
-            $titleField.style.height = `${$titleField.scrollHeight}px`;
+            $titleField.addEventListener('input', function () {
+                $titleField.style.height = `${$titleField.scrollHeight}px`;
+            });
 
-            $titleField.focus();
-        });
+            $processEvent.addEventListener('click', function () {
+                const date = eventDateRange.selectedDates
 
-        $titleField.addEventListener('input', function () {
-            $titleField.style.height = `${$titleField.scrollHeight}px`;
-        });
-
-        $processEvent.addEventListener('click', function () {
-            const date = eventDateRange.selectedDates
-
-            if (!Object.keys(editableEvent).length) {
-                fullcalendarEditable.addEvent({
-                    id: new Date().getTime(),
-                    title: $titleField.value || '(No title)',
-                    repeatField: repeatField.getValue(),
-                    guestsField: JSON.parse(JSON.stringify(guestsField.getValue())),
-                    eventDescriptionLabel: $eventDescriptionLabel.value,
-                    eventLocationLabel: $eventLocationLabel.value,
-                    start: moment(date[0]).format('YYYY-MM-DD'),
-                    end: date.length > 1 ? moment(date[1]).format('YYYY-MM-DD') : moment(date[0]).format('YYYY-MM-DD'),
-                    classNames: eventColorField.getValue(),
-                });
-            } else {
-                editableEvent.setProp('title', $titleField.value)
-                editableEvent.setExtendedProp('repeatField', repeatField.getValue())
-                editableEvent.setExtendedProp('guestsField', JSON.parse(JSON.stringify(guestsField.getValue())))
-                editableEvent.setExtendedProp('eventDescriptionLabel', $eventDescriptionLabel.value)
-                editableEvent.setExtendedProp('eventLocationLabel', $eventLocationLabel.value)
-                editableEvent.setProp('classNames', [eventColorField.getValue()])
-                editableEvent.setStart(moment(date[0]).format('YYYY-MM-DD'))
-                editableEvent.setEnd(date.length > 1 ? moment(date[1]).format('YYYY-MM-DD') : moment(date[0]).format('YYYY-MM-DD'))
-            }
-
-            addEventToCalendarModal.hide();
-
-            filterSearchExample.filter();
-        });
-
-        function triggerEvent(el, evt) {
-            const newEvt = document.createEvent('HTMLEvents');
-
-            newEvt.initEvent(evt, false, true);
-
-            el.dispatchEvent(newEvt);
-        }
-
-        // Set Form
-        function prepareData(title, start, end, event = {}) {
-            addEventToCalendarModal.show();
-
-            $processEvent.textContent = 'Save';
-
-            $titleField.value = title;
-
-            eventDateRange.setDate([moment(start).format('MM/DD/YYYY'), moment(end).format('MM/DD/YYYY')])
-
-            if (Object.keys(event).length) {
-                let newTags = [];
-
-                for (let i = 0; i < event.extendedProps.guestsField.length; i += 1) {
-                    newTags.push(event.extendedProps.guestsField[i]);
+                if (!Object.keys(editableEvent).length) {
+                    fullcalendarEditable.addEvent({
+                        id: new Date().getTime(),
+                        title: $titleField.value || '(No title)',
+                        repeatField: repeatField.getValue(),
+                        guestsField: JSON.parse(JSON.stringify(guestsField.getValue())),
+                        eventDescriptionLabel: $eventDescriptionLabel.value,
+                        eventLocationLabel: $eventLocationLabel.value,
+                        start: moment(date[0]).format('YYYY-MM-DD'),
+                        end: date.length > 1 ? moment(date[1]).format('YYYY-MM-DD') : moment(date[0]).format('YYYY-MM-DD'),
+                        classNames: eventColorField.getValue(),
+                    });
+                } else {
+                    editableEvent.setProp('title', $titleField.value)
+                    editableEvent.setExtendedProp('repeatField', repeatField.getValue())
+                    editableEvent.setExtendedProp('guestsField', JSON.parse(JSON.stringify(guestsField.getValue())))
+                    editableEvent.setExtendedProp('eventDescriptionLabel', $eventDescriptionLabel.value)
+                    editableEvent.setExtendedProp('eventLocationLabel', $eventLocationLabel.value)
+                    editableEvent.setProp('classNames', [eventColorField.getValue()])
+                    editableEvent.setStart(moment(date[0]).format('YYYY-MM-DD'))
+                    editableEvent.setEnd(date.length > 1 ? moment(date[1]).format('YYYY-MM-DD') : moment(date[0]).format('YYYY-MM-DD'))
                 }
 
-                guestsField.setValue(newTags);
+                addEventToCalendarModal.hide();
 
-                repeatField.setValue(event.extendedProps.repeatField)
-                $eventDescriptionLabel.value = event.extendedProps.eventDescriptionLabel
-                $eventLocationLabel.value = event.extendedProps.eventLocationLabel
-                eventColorField.setValue(event.classNames[0])
+                filterSearchExample.filter();
+            });
+
+            function triggerEvent(el, evt) {
+                const newEvt = document.createEvent('HTMLEvents');
+
+                newEvt.initEvent(evt, false, true);
+
+                el.dispatchEvent(newEvt);
+            }
+
+            // Set Form
+            function prepareData(title, start, end, event = {}) {
+                addEventToCalendarModal.show();
+
+                $processEvent.textContent = 'Save';
+
+                $titleField.value = title;
+
+                eventDateRange.setDate([moment(start).format('MM/DD/YYYY'), moment(end).format('MM/DD/YYYY')])
+
+                if (Object.keys(event).length) {
+                    let newTags = [];
+
+                    for (let i = 0; i < event.extendedProps.guestsField.length; i += 1) {
+                        newTags.push(event.extendedProps.guestsField[i]);
+                    }
+
+                    guestsField.setValue(newTags);
+
+                    repeatField.setValue(event.extendedProps.repeatField)
+                    $eventDescriptionLabel.value = event.extendedProps.eventDescriptionLabel
+                    $eventLocationLabel.value = event.extendedProps.eventLocationLabel
+                    eventColorField.setValue(event.classNames[0])
+
+                    triggerEvent($repeatLabel, 'change');
+                    triggerEvent($eventColorLabel, 'change');
+
+                    editableEvent = event;
+                }
+            }
+
+            // Get Avatar
+            function getAvatar(data) {
+                let member = allMembers.filter(m => m.value === data)
+                if (member.length) {
+                    member = member[0]
+                } else {
+                    member = {
+                        value: data,
+                        src: null
+                    }
+                }
+
+                return member.src ? `<img class="avatar avatar-xs avatar-circle me-2" src="${member.src}">` : `
+                            <div class="avatar avatar-xs avatar-soft-primary avatar-circle me-2">
+                                <span class="avatar-initials">${member.value.charAt(0)}</span>
+                            </div>
+                        `
+            }
+
+            // Get Avatars HTML
+            function getAvatars(members) {
+                const $ul = document.createElement('ul');
+                $ul.classList.add(
+                    'list-unstyled',
+                    'mb-0'
+                );
+
+                for (let i = 0; i < members.length; i += 1) {
+                    const $li = document.createElement('li');
+                    $li.classList.add(
+                        'd-flex',
+                        'align-items-center',
+                        'mb-2'
+                    );
+                    $li.innerHTML = `
+                                    ${getAvatar(members[i])}
+                                    <span>${members[i]}</span>
+                                `;
+
+                    $ul.appendChild($li);
+                }
+
+                return members.length > 0 ? $ul.outerHTML : false
+            }
+
+            // Clear Form
+            function clearForm() {
+                $titleField.value = '';
+                $eventDescriptionLabel.value = '';
+                $eventLocationLabel.value = '';
+                repeatField.setValue('everyday')
+                eventColorField.setValue('hs-team');
+                eventDateRange.clear()
+
+                editableEvent = {};
 
                 triggerEvent($repeatLabel, 'change');
                 triggerEvent($eventColorLabel, 'change');
 
-                editableEvent = event;
-            }
-        }
-
-        // Get Avatar
-        function getAvatar(data) {
-            let member = allMembers.filter(m => m.value === data)
-            if (member.length) {
-                member = member[0]
-            } else {
-                member = {
-                    value: data,
-                    src: null
+                if (guestsField) {
+                    guestsField.clear();
                 }
+
+                $processEvent.text = 'Create Event';
             }
 
-            return member.src ? `<img class="avatar avatar-xs avatar-circle me-2" src="${member.src}">` : `
-                        <div class="avatar avatar-xs avatar-soft-primary avatar-circle me-2">
-                            <span class="avatar-initials">${member.value.charAt(0)}</span>
-                        </div>
-                    `
-        }
 
-        // Get Avatars HTML
-        function getAvatars(members) {
-            const $ul = document.createElement('ul');
-            $ul.classList.add(
-                'list-unstyled',
-                'mb-0'
-            );
+            // async function send_sms(message, number) {
+                
+            //     // const url = 'http://127.0.0.1:8000/core/send_sms/';
+            //     const url = 'http://gnome.mak.ac.ug/send_sms/';
+            //     const method = "POST";
+            //     const contentType = "application/json";
+            //     const accept = "application/json";
 
-            for (let i = 0; i < members.length; i += 1) {
-                const $li = document.createElement('li');
-                $li.classList.add(
-                    'd-flex',
-                    'align-items-center',
-                    'mb-2'
-                );
-                $li.innerHTML = `
-                                ${getAvatar(members[i])}
-                                <span>${members[i]}</span>
-                            `;
+            //     const csrftoken = getToken('csrftoken');
+            //     console.log("Index CSRFToken:", csrftoken);
 
-                $ul.appendChild($li);
+            //     const body = {
+            //         messages: message,
+            //         numbers: number
+            //     }
+            //     console.log("Data Body:", body);
+            //     let response = await fetch(url, {
+            //         method: method,
+            //         body: JSON.stringify({'messages': message, 'numbers': number}),
+            //         headers: {
+            //             'Content-Type': contentType,
+            //             'X-CSRFToken': csrftoken
+            //         }
+            //     });
+
+            //     let response_data = await response.json();
+
+            //     console.log("Response:", response_data);
+
+            // }
+
+
+            function convertDateTime(dateTimeString) {
+                const date = new Date(dateTimeString);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${minutes}`;
             }
 
-            return members.length > 0 ? $ul.outerHTML : false
-        }
+            // Filter
+            filterSearchExample = new HSFullcalendarFilter(fullcalendarEditable);
 
-        // Clear Form
-        function clearForm() {
-            $titleField.value = '';
-            $eventDescriptionLabel.value = '';
-            $eventLocationLabel.value = '';
-            repeatField.setValue('everyday')
-            eventColorField.setValue('hs-team');
-            eventDateRange.clear()
+            filterSearchExample.addFilter('byTitle', function (event) {
+                return event.title.toLowerCase().indexOf($filterByTitle.value.toLowerCase()) !== -1;
+            })
 
-            editableEvent = {};
+            filterSearchExample.addFilter('byCategory', function (event) {
+                const selectedCategories = document.querySelectorAll('[data-filter] input:checked');
+                let values = [];
+                let show;
 
-            triggerEvent($repeatLabel, 'change');
-            triggerEvent($eventColorLabel, 'change');
+                for (let i = 0; i < selectedCategories.length; i += 1) {
+                values.push(selectedCategories[i].value);
+                }
 
-            if (guestsField) {
-                guestsField.clear();
-            }
+                if (!selectedCategories.length) {
+                return false;
+                }
 
-            $processEvent.text = 'Create Event';
-        }
+                show = false
 
-        // Filter
-        filterSearchExample = new HSFullcalendarFilter(fullcalendarEditable);
+                for (let i = 0; i < selectedCategories.length; i += 1) {
+                show = values.includes(event.classNames[0]);
+                }
 
-        filterSearchExample.addFilter('byTitle', function (event) {
-            return event.title.toLowerCase().indexOf($filterByTitle.value.toLowerCase()) !== -1;
-        })
+                return show;
+            });
 
-        filterSearchExample.addFilter('byCategory', function (event) {
-            const selectedCategories = document.querySelectorAll('[data-filter] input:checked');
-            let values = [];
-            let show;
-
-            for (let i = 0; i < selectedCategories.length; i += 1) {
-            values.push(selectedCategories[i].value);
-            }
-
-            if (!selectedCategories.length) {
-            return false;
-            }
-
-            show = false
-
-            for (let i = 0; i < selectedCategories.length; i += 1) {
-            show = values.includes(event.classNames[0]);
-            }
-
-            return show;
-        });
-
-        $filterByTitle.addEventListener('input', function () {
-            filterSearchExample.filter();
-        });
-
-        for (let i = 0; i < $filters.length; i += 1) {
-            $filters[i].addEventListener('change', function () {
+            $filterByTitle.addEventListener('input', function () {
                 filterSearchExample.filter();
             });
-        }
 
-        filterSearchExample.filter();
+            for (let i = 0; i < $filters.length; i += 1) {
+                $filters[i].addEventListener('change', function () {
+                    filterSearchExample.filter();
+                });
+            }
 
-
-        // ADD DRAGGABLE CLASS FOR CALENDAR
-        // =======================================================
-        const Draggable = FullCalendar.Draggable;
-
-        new Draggable(document.querySelector('#external-events'), {
-            itemSelector: '.fc-event'
-        });
+            filterSearchExample.filter();
 
 
-        // INITIALIZATION OF NAVBAR VERTICAL ASIDE
-        // =======================================================
-        new HSSideNav('.js-navbar-vertical-aside', {
-            onMini: function () {
-            setTimeout(function () {
+            // ADD DRAGGABLE CLASS FOR CALENDAR
+            // =======================================================
+            const Draggable = FullCalendar.Draggable;
+
+            new Draggable(document.querySelector('#external-events'), {
+                itemSelector: '.fc-event'
+            });
+
+
+            // INITIALIZATION OF NAVBAR VERTICAL ASIDE
+            // =======================================================
+            new HSSideNav('.js-navbar-vertical-aside', {
+                onMini: function () {
+                setTimeout(function () {
+                    fullcalendarEditable.updateSize()
+                }, 200)
+                },
+                onFull: function () {
+                setTimeout(function () {
+                    fullcalendarEditable.updateSize()
+                }, 200)
+                },
+            }).init()
+
+            setTimeout(() => {
                 fullcalendarEditable.updateSize()
-            }, 200)
-            },
-            onFull: function () {
-            setTimeout(function () {
-                fullcalendarEditable.updateSize()
-            }, 200)
-            },
-        }).init()
-
-        setTimeout(() => {
-            fullcalendarEditable.updateSize()
-        }, 100)
-        }
-    })()
+            }, 100)
+            }
+        })()
     </script>
 {% endblock %}
