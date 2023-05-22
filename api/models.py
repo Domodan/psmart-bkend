@@ -20,6 +20,69 @@ class Subjects:
         ("SST", sst)
     )
 
+# Timetable Repeat Fields.
+class RepeatField:
+    weekdays = "weekdays"
+    never = "never"
+    everyday = "everyday"
+
+    CHOICES = (
+        ("weekdays", weekdays),
+        ("never", never),
+        ("everyday", everyday),
+    )
+
+# Timetable Subjects Style Class Names.
+class SubjectStylesClassName:
+    english = "English"
+    math = "Mathematics"
+    science = "Science"
+    sst = "Social Studies"
+
+    CHOICES = (
+        ("fullcalendar-custom-event-hs-team", english),
+        ("fullcalendar-custom-event-tasks", math),
+        ("fullcalendar-custom-event-hs-team", sst),
+        ("fullcalendar-custom-event-holidays", science),
+    )
+
+# Timetable Subjects Icons.
+class SubjectIcons:
+    english = "English"
+    math = "Mathematics"
+    science = "Science"
+    sst = "Social Studies"
+    religious = "Religious Education"
+    computer = "Computer Studies"
+
+    CHOICES = (
+        ("static/core/assets/svg/brands/mastercard.svg", english),
+        ("static/core/assets/svg/brands/excel-icon.svg", math),
+        ("static/core/assets/svg/brands/figma-icon.svg", sst),
+        ("static/core/assets/svg/brands/pdf-icon.svg", science),
+        ("static/core/assets/svg/brands/jira-icon.svg", religious),
+        ("static/core/assets/svg/brands/slack-icon.svg", computer),
+    )
+
+# Timetable Events Titles.
+class EventTitles:
+    english = "English"
+    math = "Mathematics"
+    science = "Science"
+    sst = "Social Studies"
+    religious = "Religious Education"
+    computer = "Computer Studies"
+
+    CHOICES = (
+        ("English", english),
+        ("Mathematics", math),
+        ("Social Studies", sst),
+        ("Science", science),
+        ("Religious Education", religious),
+        ("Computer Studies", computer),
+    )
+
+
 # Subjects models 
 class Subject(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -127,14 +190,22 @@ class Attendance(models.Model):
 # Timetable Schedule models
 class Timetable(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=50, verbose_name="Event Title")
+    title = models.CharField(max_length=50, verbose_name="Event Title",
+                            default=EventTitles.english,
+                            choices=EventTitles.CHOICES)
     guestsField = models.ForeignKey(Teacher, on_delete=models.CASCADE,
                                     verbose_name="teacher", related_name="teacher")
     eventDescriptionLabel = models.CharField(max_length=50, verbose_name="Description")
     eventLocationLabel = models.CharField(max_length=20, verbose_name="Venue")
-    repeatField = models.CharField(max_length=10, verbose_name="Repeat Field")
-    image = models.ImageField(upload_to="timetable", default="figma-icon.svg")
-    className = models.CharField(max_length=50, verbose_name="Class Theme", default="fullcalendar-custom-event-holidays")
+    repeatField = models.CharField(max_length=10, verbose_name="Repeat Field",
+                                   default=RepeatField.weekdays,
+                                   choices=RepeatField.CHOICES)
+    image = models.CharField(max_length=60,
+                            default=SubjectIcons.english,
+                            choices=SubjectIcons.CHOICES)
+    className = models.CharField(max_length=50, verbose_name="Class Theme",
+                                default=SubjectStylesClassName.english,
+                                choices=SubjectStylesClassName.CHOICES)
     start = models.DateTimeField(verbose_name="Start Time")
     end = models.DateTimeField(verbose_name="End Time")
     allDays = models.BooleanField(default=False)
