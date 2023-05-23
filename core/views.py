@@ -254,7 +254,7 @@ def student_profile(request, pk=None):
     for timetable in timetable_obj:
         actual_total_hours += timetable.end - timetable.start
 
-    attendance_percentage = math.floor((total_hours_attendance / actual_total_hours) * 100 + 0.5)
+    attendance_percentage = abs(math.floor((total_hours_attendance / actual_total_hours) * 100 + 0.5))
 
     subjects = []
     subjects_attended = []
@@ -283,7 +283,7 @@ def student_profile(request, pk=None):
             percent = 0.0
             if subject == subject_:
                 if hours and hour_:
-                    percent = hours / total_hours_subject.total_seconds() * 100
+                    percent = abs(hours / total_hours_subject.total_seconds() * 100)
                 hour_delta = timedelta(hours=hour_)
                 newData['subject'] = subject_
                 newData['hours'] = hour_
@@ -391,7 +391,7 @@ def teacher_profile(request, pk=None):
     for timetable in timetable_obj:
         actual_total_hours += timetable.end - timetable.start
 
-    attendance_percentage = math.floor((total_hours_attendance / actual_total_hours) * 100 + 0.5)
+    attendance_percentage = abs(math.floor((total_hours_attendance / actual_total_hours) * 100 + 0.5))
 
     subjects = []
     subjects_attended = []
@@ -419,7 +419,7 @@ def teacher_profile(request, pk=None):
             percent = 0.0
             if subject == subject_:
                 if hours and hour_:
-                    percent = hours / total_hours_subject.total_seconds() * 100
+                    percent = abs(hours / total_hours_subject.total_seconds() * 100)
                 hour_delta = timedelta(hours=hour_)
                 # total_seconds = hour_delta.total_seconds()
                 # hourss = int(total_seconds // 3600)
