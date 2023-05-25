@@ -153,7 +153,11 @@
                 </td> -->
                 <td>{{ teacher.unique_id }}</td>
                 <td>{{ teacher.phone }}</td>
-                <td>{{ teacher.subject }}</td>
+                <td>
+                  {% for subject in teacher.subject.all %}
+                    {{ subject }}
+                  {% endfor %}
+                </td>
                 <td>{{ teacher.gender }}</td>
                 <td>
                     <button type="button" class="btn btn-white btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal">
